@@ -1,6 +1,6 @@
 // 夥伴K的夥伴包 (stygiomedusa companion-pack tasks 8.1): 搬入私人 build 原本 (CompanionK.vue, companionK.ts) 的公式,
-// 以 60 fps 逐 frame 烘焙成線性 keyframe, 動作與時間和原本一樣. 產物寫到 ./companion/, 再於 ../companion-tool/ 以
-// `npm run pack -- ../companionk/companion ../companionk/companionk.companion` 打包.
+// 以 60 fps 逐 frame 烘焙成線性 keyframe, 動作與時間和原本一樣. 產物寫到 ./companion/, 再於 repo 的根目錄以
+// `npm run pack -- companionk/companion companionk/companionk.companion` 打包.
 //
 // 與原本不同之處 (dotLottie 的限制):
 // - 只有一條時間軸: 搖擺的週期改為與呼吸相同的 2.8 秒; 閒置動作只在每 2.8 秒一輪結束時抽籤, 停留時間固定 1 秒.
