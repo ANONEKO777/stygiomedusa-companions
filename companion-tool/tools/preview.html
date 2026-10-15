@@ -1,0 +1,255 @@
+<!doctype html>
+<!--
+  夥伴包的預覽頁 (由 preview.mjs 在 headless 瀏覽器中開啟): 以 app 相同版本的 dotLottie runtime 載入夥伴包,
+  依 app 的 input 契約與 bud 動畫播放, 截下各邊的畫面.
+  app 的行為以 stygiomedusa src/CompanionPack.vue 與 src-tauri/src/bubble/companion.rs 為準; 這裡只模擬直邊,
+  不模擬角落, 探出縮回的 spring 與柔軟身體.
+-->
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <title>companion preview</title>
+    <style>
+      body { margin: 0; background: #ffffff; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import { DotLottie } from '/runtime/index.js';
+
+      DotLottie.setWasmUrl('/runtime/dotlottie-player.wasm');
+
+      /** 史萊姆珠子的半徑 (Rust `BEAD_RADIUS`). */
+      const BEAD_RADIUS = 42;
+      /** `bud` 0 到 0.2 時探出完成 (`companionPack.ts` 的 `BUD.lean`). */
+      const LEAN_SPAN = [0, 0.2];
+      /** 史萊姆的 `bud` 動畫: 0.9 秒 ease-in-out (`BubbleWindow.vue` 的 `budTween`). */
+      const BUD_SECONDS = 0.9;
+      /** 各邊往螢幕內側的方向, 以及從鏈端珠子往夥伴的方向 (沿螢幕邊緣). */
+      const EDGES = {
+        right: { inward: [-1, 0], along: [0, -1] },
+        bottom: { inward: [0, -1], along: [-1, 0] },
+        left: { inward: [1, 0], along: [0, -1] },
+        top: { inward: [0, 1], along: [1, 0] },
+      };
+
+      const span = (value, [from, to]) => Math.min(1, Math.max(0, (value - from) / (to - from)));
+      const easeOutBack = (value) => {
+        const c1 = 1.70158;
+        const t = value - 1;
+        return 1 + (c1 + 1) * t * t * t + c1 * t * t;
+      };
+      /** cubic-bezier(0.42, 0, 0.58, 1): motion 的 `easeInOut`. */
+      function easeInOut(x) {
+        const curve = (t, a, b) => 3 * a * t * (1 - t) ** 2 + 3 * b * t * t * (1 - t) + t ** 3;
+        let low = 0;
+        let high = 1;
+        for (let i = 0; i < 30; i++) {
+          const mid = (low + high) / 2;
+          if (curve(mid, 0.42, 0.58) < x) low = mid;
+          else high = mid;
+        }
+        return curve((low + high) / 2, 0, 1);
+      }
+      const add = (a, b, scale = 1) => [a[0] + b[0] * scale, a[1] + b[1] * scale];
+      const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+      const wait = (seconds) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
+      function decode(base64) {
+        const text = atob(base64);
+        const bytes = new Uint8Array(text.length);
+        for (let i = 0; i < text.length; i++) bytes[i] = text.charCodeAt(i);
+        return bytes.buffer;
+      }
+
+      /** 一個邊的夥伴: 載入 dotLottie 並啟動 state machine (與 app 相同的設定). */
+      function load(manifest, data, scale) {
+        const side = 2 * manifest.canvas;
+        const canvas = document.createElement('canvas');
+        canvas.style.width = `${side}px`;
+        canvas.style.height = `${side}px`;
+        document.body.replaceChildren(canvas);
+        return new Promise((resolve, reject) => {
+          const player = new DotLottie({
+            canvas,
+            data,
+            autoplay: true,
+            useFrameInterpolation: true,
+            renderConfig: { devicePixelRatio: scale, freezeOnOffscreen: false },
+            stateMachineConfig: { openUrlPolicy: { whitelist: [] } },
+          });
+          player.addEventListener('loadError', (event) => reject(new Error(`動畫無法載入: ${event.error?.message ?? event.error}`)));
+          player.addEventListener('load', () => {
+            const index = player.manifest;
+            const machine = index?.initial?.stateMachine ?? index?.stateMachines?.[0]?.id;
+            const started =
+              machine && player.stateMachineLoad(machine) && player.stateMachineSetSeed(12345) && player.stateMachineStart();
+            if (!started) reject(new Error(`無法啟動 state machine ${machine ?? '(沒有)'}`));
+            else resolve({ player, canvas });
+          });
+        });
+      }
+
+      /**
+       * 一個邊的預覽: 依 app 的方式送 input, 移動畫布 (`inset`) 並寫入 `gear` slot, 在指定的時間截圖.
+       * 截圖是合成的: 背景, 鏈端珠子 (藍), 夥伴, 螢幕外 (灰), 點擊範圍 (紅色虛線).
+       */
+      async function previewEdge(manifest, data, scale, edge) {
+        const { player, canvas } = await load(manifest, data, scale);
+        const C = manifest.canvas;
+        const side = 2 * C;
+        const { inward, along } = EDGES[edge];
+        const state = { hovering: false, bud: 0, reducedMotion: false };
+        const insetOf = () => {
+          const out = span(state.bud, LEAN_SPAN);
+          return manifest.radius * manifest.lean * (state.reducedMotion ? out : easeOutBack(out));
+        };
+        /** 夥伴中心在螢幕邊緣上的位置 (畫布座標): 畫布往內移 `inset`, 所以它往外移. */
+        const edgePoint = () => add([C, C], inward, -insetOf());
+        const gearPoint = () =>
+          manifest.gear ? add(add(edgePoint(), along, manifest.gear.gap - manifest.gap), inward, BEAD_RADIUS) : null;
+        // 先寫 slot 再送 input: 進入不播放的 state (`autoplay: false`) 時只畫一次, 之後寫入的 slot 不會重畫.
+        const send = () => {
+          const gear = gearPoint();
+          if (gear) player.setVectorSlot('gear', gear);
+          player.stateMachineSetStringInput('edge', edge);
+          player.stateMachineSetBooleanInput('hovering', state.hovering);
+          player.stateMachineSetBooleanInput('dragging', false);
+          player.stateMachineSetNumericInput('bud', state.bud);
+          player.stateMachineSetBooleanInput('reducedMotion', state.reducedMotion);
+        };
+        /** `bud` 以 0.9 秒 ease-in-out 走到 `to`; `at` 中的時間 (秒) 截圖. */
+        async function tweenBud(to, at = {}) {
+          const from = state.bud;
+          const start = performance.now();
+          const pending = Object.entries(at);
+          for (;;) {
+            await frame();
+            const elapsed = (performance.now() - start) / 1000;
+            state.bud = from + (to - from) * easeInOut(Math.min(1, elapsed / BUD_SECONDS));
+            send();
+            for (const [name, time] of [...pending]) {
+              if (elapsed >= time) {
+                await frame();
+                snap(name);
+                pending.splice(pending.findIndex(([other]) => other === name), 1);
+              }
+            }
+            if (elapsed >= BUD_SECONDS && pending.length === 0) return;
+          }
+        }
+        const shots = [];
+        function snap(name) {
+          const out = document.createElement('canvas');
+          out.width = out.height = side * scale;
+          const g = out.getContext('2d');
+          g.scale(scale, scale);
+          g.fillStyle = '#f4f4f5';
+          g.fillRect(0, 0, side, side);
+          const circle = ([x, y], r) => {
+            g.beginPath();
+            g.arc(x, y, r, 0, 2 * Math.PI);
+          };
+          const point = edgePoint();
+          // 史萊姆鏈端的珠子.
+          circle(add(add(point, along, -manifest.gap), inward, BEAD_RADIUS), BEAD_RADIUS);
+          g.fillStyle = 'rgba(96, 165, 250, 0.45)';
+          g.fill();
+          g.drawImage(canvas, 0, 0, side, side);
+          // 螢幕外: 邊緣線的外側.
+          const outward = [-inward[0], -inward[1]];
+          g.save();
+          g.beginPath();
+          if (outward[0] > 0) g.rect(point[0], 0, side, side);
+          if (outward[0] < 0) g.rect(point[0] - side, 0, side, side);
+          if (outward[1] > 0) g.rect(0, point[1], side, side);
+          if (outward[1] < 0) g.rect(0, point[1] - side, side, side);
+          g.fillStyle = 'rgba(63, 63, 70, 0.35)';
+          g.fill();
+          g.restore();
+          // 點擊範圍: 夥伴 (hover 時往內探出 lean × radius) 與齒輪 (app 固定).
+          g.setLineDash([4, 3]);
+          g.lineWidth = 1;
+          g.strokeStyle = 'rgba(220, 38, 38, 0.9)';
+          circle(add(point, inward, state.hovering ? manifest.radius * manifest.lean : 0), manifest.radius);
+          g.stroke();
+          const gear = gearPoint();
+          if (gear && state.bud >= LEAN_SPAN[1]) {
+            circle(gear, manifest.gear.radius);
+            g.stroke();
+          }
+          shots.push({ edge, name, state: player.stateMachineGetCurrentState(), bud: Number(state.bud.toFixed(3)), image: out });
+        }
+
+        send();
+        await wait(1.5);
+        snap('idle');
+        state.hovering = true;
+        send();
+        await tweenBud(1, { spit: 0.6 });
+        await wait(1.2);
+        snap('hold');
+        state.hovering = false;
+        send();
+        await tweenBud(0, { gulp: 0.3 });
+        state.reducedMotion = true;
+        send();
+        await wait(0.4);
+        snap('still');
+        state.hovering = true;
+        state.bud = 1;
+        send();
+        await wait(0.4);
+        snap('stillGear');
+        player.destroy();
+        return shots;
+      }
+
+      /** 所有邊的截圖拼成一張: 每列一個邊, 每欄一個時間點, 下方標示 state 與 bud. */
+      function sheetOf(shots, side) {
+        const edges = [...new Set(shots.map((shot) => shot.edge))];
+        const names = [...new Set(shots.map((shot) => shot.name))];
+        const label = 18;
+        const head = 22;
+        const left = 64;
+        const sheet = document.createElement('canvas');
+        sheet.width = left + names.length * side;
+        sheet.height = head + edges.length * (side + label);
+        const g = sheet.getContext('2d');
+        g.fillStyle = '#ffffff';
+        g.fillRect(0, 0, sheet.width, sheet.height);
+        g.fillStyle = '#18181b';
+        g.font = '13px sans-serif';
+        names.forEach((name, column) => g.fillText(name, left + column * side + 6, 16));
+        edges.forEach((edge, row) => {
+          const top = head + row * (side + label);
+          g.fillStyle = '#18181b';
+          g.fillText(edge, 6, top + side / 2);
+          for (const shot of shots.filter((item) => item.edge === edge)) {
+            const x = left + names.indexOf(shot.name) * side;
+            g.drawImage(shot.image, x, top, side, side);
+            g.strokeStyle = '#d4d4d8';
+            g.strokeRect(x + 0.5, top + 0.5, side - 1, side - 1);
+            g.fillStyle = '#52525b';
+            g.font = '11px sans-serif';
+            g.fillText(`${shot.state} bud ${shot.bud}`, x + 4, top + side + 13);
+            g.font = '13px sans-serif';
+          }
+        });
+        return sheet;
+      }
+
+      window.preview = async ({ manifest, lottie, scale, edges }) => {
+        const data = decode(lottie);
+        const shots = [];
+        for (const edge of edges) shots.push(...(await previewEdge(manifest, data, scale, edge)));
+        return {
+          shots: shots.map(({ image, ...shot }) => ({ ...shot, png: image.toDataURL('image/png') })),
+          sheet: sheetOf(shots, 2 * manifest.canvas).toDataURL('image/png'),
+        };
+      };
+      window.ready = true;
+    </script>
+  </body>
+</html>

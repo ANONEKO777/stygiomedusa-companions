@@ -1,0 +1,205 @@
+{
+  "$comment": "驗證規則的共用案例: 每個案例以 JSON merge patch (RFC 7386, null 刪除欄位, 陣列整個取代) 改動 base, errors 是預期的原因 (每行一項, 順序相同; 空陣列為通過). `uv run tools/companion.py selftest` 與 stygiomedusa 的 `cargo test --test companion_tool_cases` 都讀這份檔案.",
+  "base": {
+    "manifest": {
+      "format": 1,
+      "id": "mochi",
+      "name": "麻糬",
+      "author": "someone",
+      "radius": 32,
+      "canvas": 120,
+      "gap": 75,
+      "lean": 0.8,
+      "gear": { "gap": 150, "radius": 24 },
+      "jiggle": { "stiffness": 260, "damping": 7, "thin": 0.5, "appear": 2.8, "hide": -1.8, "spit": -2.6, "gulp": 2.2 },
+      "kicks": { "pop": 2.8, "duck": -1.8 }
+    },
+    "animation": {
+      "v": "5.12.0", "fr": 30, "ip": 0, "op": 60, "w": 240, "h": 240, "nm": "mochi", "ddd": 0, "assets": [],
+      "slots": { "gear": { "p": { "a": 0, "k": [200, 40] } } },
+      "layers": [
+        {
+          "ty": 4, "nm": "gear", "ind": 1, "ip": 0, "op": 60, "st": 0, "sr": 1,
+          "ks": { "a": { "a": 0, "k": [0, 0] }, "p": { "a": 0, "k": [200, 40], "sid": "gear" },
+                  "s": { "a": 0, "k": [100, 100] }, "r": { "a": 0, "k": 0 }, "o": { "a": 0, "k": 100 } },
+          "shapes": [
+            { "ty": "el", "nm": "e", "p": { "a": 0, "k": [0, 0] }, "s": { "a": 0, "k": [48, 48] } },
+            { "ty": "fl", "nm": "f", "c": { "a": 0, "k": [1, 0.85, 0.2, 1] }, "o": { "a": 0, "k": 100 } }
+          ]
+        }
+      ]
+    },
+    "stateMachine": {
+      "initial": "idle",
+      "inputs": [
+        { "type": "String", "name": "edge", "value": "right" },
+        { "type": "Boolean", "name": "hovering", "value": false },
+        { "type": "Boolean", "name": "dragging", "value": false },
+        { "type": "Numeric", "name": "bud", "value": 0 },
+        { "type": "Boolean", "name": "reducedMotion", "value": false }
+      ],
+      "states": [
+        { "name": "idle", "type": "PlaybackState", "animation": "mochi", "loop": true, "autoplay": true, "transitions": [] },
+        { "name": "pop", "type": "PlaybackState", "animation": "mochi", "autoplay": true, "transitions": [] },
+        { "name": "duck", "type": "PlaybackState", "animation": "mochi", "autoplay": true, "transitions": [] }
+      ]
+    }
+  },
+  "cases": [
+    { "name": "base 通過", "errors": [] },
+    {
+      "name": "radius 太小, 齒輪也因此超出畫布",
+      "manifest": { "radius": 12 },
+      "errors": [
+        "radius 為 12, 允許的範圍是 16 到 48",
+        "gear.gap 為 150, 允許的範圍是最多 138.6 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 32.4)"
+      ]
+    },
+    {
+      "name": "gap 蓋到鏈端的珠子",
+      "manifest": { "gap": 70 },
+      "errors": [
+        "gap 為 70, 允許的範圍是至少 74 (珠子半徑 42 加上 radius)",
+        "gear.gap 為 150, 允許的範圍是最多 149.6 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 16.4)"
+      ]
+    },
+    {
+      "name": "canvas 比夥伴小",
+      "manifest": { "canvas": 30 },
+      "errors": [
+        "canvas 為 30, 允許的範圍是至少 32 (radius)",
+        "gear.gap 為 150, 允許的範圍是最多 64.6 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 16.4)"
+      ]
+    },
+    {
+      "name": "canvas 超出鏈端預留的長度",
+      "manifest": { "canvas": 150 },
+      "errors": ["canvas 為 150, 允許的範圍是最多 139 (鏈端預留的 214 減去 gap)"]
+    },
+    { "name": "lean 超過 1", "manifest": { "lean": 1.5 }, "errors": ["lean 為 1.5, 允許的範圍是 0 到 1"] },
+    {
+      "name": "gear.radius 超過 32",
+      "manifest": { "gear": { "radius": 40 } },
+      "errors": [
+        "gear.radius 為 40, 允許的範圍是 16 到 32",
+        "gear.gap 為 150, 允許的範圍是最多 138.6 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 16.4)"
+      ]
+    },
+    {
+      "name": "齒輪與夥伴重疊",
+      "manifest": { "gear": { "gap": 120 } },
+      "errors": ["gear.gap 為 120, 允許的範圍是至少 131 (gap + radius + gear.radius)"]
+    },
+    {
+      "name": "齒輪超出畫布",
+      "manifest": { "gear": { "gap": 160 } },
+      "errors": ["gear.gap 為 160, 允許的範圍是最多 154.6 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 16.4)"]
+    },
+    {
+      "name": "探出超過珠子半徑時只剩沿邊的距離",
+      "manifest": { "radius": 48, "lean": 1, "gap": 90, "gear": { "gap": 190 } },
+      "errors": ["gear.gap 為 190, 允許的範圍是最多 186 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 0)"]
+    },
+    { "name": "id 是 none", "manifest": { "id": "none" }, "errors": ["id 不能是 none (代表沒有夥伴)"] },
+    { "name": "id 有其他字元", "manifest": { "id": "Mochi!" }, "errors": ["id 為 Mochi!, 只能使用小寫英文字母, 數字與連字號"] },
+    { "name": "id 是 Windows 保留的名稱", "manifest": { "id": "con" }, "errors": ["id 不能是 con (Windows 保留的名稱)"] },
+    { "name": "不支援的 format", "manifest": { "format": 2 }, "errors": ["format 為 2, 支援的版本是 1"] },
+    { "name": "format 不是整數", "manifest": { "format": 1.5 }, "errors": ["manifest 的 format 必須是整數"] },
+    { "name": "name 是空白", "manifest": { "name": "  " }, "errors": ["name 不能是空的"] },
+    { "name": "缺少 radius", "manifest": { "radius": null }, "errors": ["manifest 缺少 radius"] },
+    { "name": "radius 不是數字", "manifest": { "radius": "big" }, "errors": ["manifest 的 radius 必須是數字"] },
+    { "name": "缺少 jiggle", "manifest": { "jiggle": null }, "errors": ["manifest 缺少 jiggle"] },
+    { "name": "缺少 jiggle.thin", "manifest": { "jiggle": { "thin": null } }, "errors": ["manifest 缺少 jiggle.thin"] },
+    { "name": "gear 不是物件", "manifest": { "gear": 5 }, "errors": ["manifest 的 gear 必須是物件"] },
+    { "name": "缺少 gear.radius", "manifest": { "gear": { "radius": null } }, "errors": ["manifest 缺少 gear.radius"] },
+    {
+      "name": "kicks 的 state 不存在, 依名稱排序列出",
+      "manifest": { "kicks": { "zeta": 1, "alpha": 1 } },
+      "errors": ["kicks 的 state alpha 不存在於 state machine", "kicks 的 state zeta 不存在於 state machine"]
+    },
+    {
+      "name": "動畫寬高不是 2 × canvas",
+      "animation": { "w": 200, "h": 200 },
+      "errors": ["動畫的寬高為 200 x 200, 必須是 240 x 240 (2 × canvas)"]
+    },
+    {
+      "name": "畫齒輪卻沒有 gear slot",
+      "animation": { "slots": null },
+      "errors": ["動畫缺少名為 gear 的 vector slot (manifest 宣告了 gear)"]
+    },
+    {
+      "name": "gear slot 不是 vector",
+      "animation": { "slots": { "gear": { "p": { "k": 5 } } } },
+      "errors": ["動畫缺少名為 gear 的 vector slot (manifest 宣告了 gear)"]
+    },
+    { "name": "不畫齒輪就不需要 slot", "manifest": { "gear": null }, "animation": { "slots": null }, "errors": [] },
+    {
+      "name": "含有 expressions",
+      "animation": { "slots": { "gear": { "p": { "x": "time * 90" } } } },
+      "errors": ["動畫含有 expressions; 夥伴包不能含有 expressions"]
+    },
+    {
+      "name": "缺少 input bud",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Boolean", "name": "reducedMotion", "value": false }
+        ]
+      },
+      "errors": ["state machine 缺少 input bud (Numeric)"]
+    },
+    {
+      "name": "input 型別不對",
+      "stateMachine": {
+        "inputs": [
+          { "type": "Numeric", "name": "edge", "value": 0 },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false }
+        ]
+      },
+      "errors": ["state machine 的 input edge 是 Numeric, 必須是 String"]
+    },
+    {
+      "name": "多出的 input 不影響",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false },
+          { "type": "Numeric", "name": "roll", "value": 0 }
+        ]
+      },
+      "errors": []
+    },
+    {
+      "name": "state 缺少 transitions",
+      "stateMachine": {
+        "states": [
+          { "name": "idle", "type": "PlaybackState", "animation": "mochi", "loop": true, "autoplay": true, "transitions": [] },
+          { "name": "pop", "type": "PlaybackState", "animation": "mochi", "autoplay": true },
+          { "name": "duck", "type": "PlaybackState", "animation": "mochi", "autoplay": true, "transitions": [] }
+        ]
+      },
+      "errors": ["state machine 的 state pop 缺少 transitions (沒有轉換時寫空陣列)"]
+    },
+    {
+      "name": "動畫的多個問題依序列出",
+      "animation": { "w": 200, "slots": null },
+      "stateMachine": { "inputs": [{ "type": "String", "name": "edge", "value": "right" }] },
+      "errors": [
+        "動畫的寬高為 200 x 240, 必須是 240 x 240 (2 × canvas)",
+        "動畫缺少名為 gear 的 vector slot (manifest 宣告了 gear)",
+        "state machine 缺少 input hovering (Boolean)",
+        "state machine 缺少 input dragging (Boolean)",
+        "state machine 缺少 input bud (Numeric)",
+        "state machine 缺少 input reducedMotion (Boolean)"
+      ]
+    }
+  ]
+}
