@@ -1,0 +1,5484 @@
+{
+  "initial": "idle-right",
+  "inputs": [
+    {
+      "type": "String",
+      "name": "edge",
+      "value": "right"
+    },
+    {
+      "type": "Boolean",
+      "name": "hovering",
+      "value": false
+    },
+    {
+      "type": "Boolean",
+      "name": "dragging",
+      "value": false
+    },
+    {
+      "type": "Numeric",
+      "name": "bud",
+      "value": 0
+    },
+    {
+      "type": "Boolean",
+      "name": "reducedMotion",
+      "value": false
+    },
+    {
+      "type": "Numeric",
+      "name": "roll",
+      "value": 1
+    },
+    {
+      "type": "Numeric",
+      "name": "step",
+      "value": 0
+    }
+  ],
+  "interactions": [
+    {
+      "type": "OnLoopComplete",
+      "stateName": "idle-right",
+      "actions": [
+        {
+          "type": "SetRandom",
+          "inputName": "roll",
+          "min": 0,
+          "max": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink2-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceL-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceR-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "duck-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "pop-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekA-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekB-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "spit-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "gulp-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnLoopComplete",
+      "stateName": "idle-bottom",
+      "actions": [
+        {
+          "type": "SetRandom",
+          "inputName": "roll",
+          "min": 0,
+          "max": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink2-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceL-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceR-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "duck-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "pop-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekA-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekB-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "spit-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "gulp-bottom",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnLoopComplete",
+      "stateName": "idle-left",
+      "actions": [
+        {
+          "type": "SetRandom",
+          "inputName": "roll",
+          "min": 0,
+          "max": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink2-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceL-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceR-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "duck-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "pop-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekA-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekB-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "spit-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "gulp-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnLoopComplete",
+      "stateName": "idle-top",
+      "actions": [
+        {
+          "type": "SetRandom",
+          "inputName": "roll",
+          "min": 0,
+          "max": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "blink2-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceL-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "glanceR-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "duck-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "pop-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekA-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "peekB-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "spit-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "gulp-top",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "states": [
+    {
+      "name": "idle-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "idle-right",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.1225
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink2-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.175
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceL-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.2375
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceR-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.3
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "duck-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.4
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekA-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.45
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekB-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink2-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink2-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceL-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceL-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceR-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceR-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekA-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekA-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekB-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekB-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duck-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "duck-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "pop-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pop-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "pop-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "open-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spit-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "spit-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "hold-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hold-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "hold-right",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gulp-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "gulp-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "still-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "still-right",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "stillGear-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stillGear-right",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "stillGear-right",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "LessThan",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "idle-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "idle-bottom",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.1225
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink2-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.175
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceL-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.2375
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceR-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.3
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "duck-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.4
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekA-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.45
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekB-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink2-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink2-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceL-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceL-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceR-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceR-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekA-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekA-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekB-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekB-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duck-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "duck-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "pop-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pop-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "pop-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "open-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spit-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "spit-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "hold-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hold-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "hold-bottom",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gulp-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "gulp-bottom",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "still-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "still-bottom",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "stillGear-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stillGear-bottom",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "stillGear-bottom",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "LessThan",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "idle-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "idle-left",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.1225
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink2-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.175
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceL-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.2375
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceR-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.3
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "duck-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.4
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekA-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.45
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekB-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink2-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink2-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceL-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceL-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceR-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceR-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekA-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekA-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekB-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekB-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duck-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "duck-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "pop-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pop-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "pop-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "open-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spit-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "spit-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "hold-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hold-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "hold-left",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gulp-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "gulp-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "still-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "still-left",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "stillGear-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stillGear-left",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "stillGear-left",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "LessThan",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "idle-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "idle-top",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.1225
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "blink2-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.175
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceL-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.2375
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "glanceR-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.3
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "duck-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.4
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekA-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.45
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "peekB-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "roll",
+              "conditionType": "LessThan",
+              "compareTo": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blink2-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "blink2-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceL-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceL-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glanceR-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "glanceR-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekA-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekA-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peekB-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "peekB-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duck-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "duck-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        },
+        {
+          "type": "SetNumeric",
+          "inputName": "roll",
+          "value": 1
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "pop-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pop-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "pop-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "open-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "open-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spit-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "spit-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "hold-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hold-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "hold-top",
+      "loop": true,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "gulp-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gulp-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "gulp-top",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "spit-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "still-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "still-top",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-bottom",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "stillGear-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "hovering",
+              "conditionType": "Equal",
+              "compareTo": true
+            },
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "GreaterThanOrEqual",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stillGear-top",
+      "type": "PlaybackState",
+      "animation": "companionk",
+      "segment": "stillGear-top",
+      "loop": false,
+      "autoplay": false,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "idle-top",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": false
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-top",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "bud",
+              "conditionType": "LessThan",
+              "compareTo": 0.2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
