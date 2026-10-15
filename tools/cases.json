@@ -33,6 +33,7 @@
       "initial": "idle",
       "inputs": [
         { "type": "String", "name": "edge", "value": "right" },
+        { "type": "String", "name": "along", "value": "up" },
         { "type": "Boolean", "name": "hovering", "value": false },
         { "type": "Boolean", "name": "dragging", "value": false },
         { "type": "Numeric", "name": "bud", "value": 0 },
@@ -143,6 +144,7 @@
       "stateMachine": {
         "inputs": [
           { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
           { "type": "Boolean", "name": "hovering", "value": false },
           { "type": "Boolean", "name": "dragging", "value": false },
           { "type": "Boolean", "name": "reducedMotion", "value": false }
@@ -151,10 +153,24 @@
       "errors": ["state machine 缺少 input bud (Numeric)"]
     },
     {
+      "name": "缺少 input along",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false }
+        ]
+      },
+      "errors": ["state machine 缺少 input along (String)"]
+    },
+    {
       "name": "input 型別不對",
       "stateMachine": {
         "inputs": [
           { "type": "Numeric", "name": "edge", "value": 0 },
+          { "type": "String", "name": "along", "value": "up" },
           { "type": "Boolean", "name": "hovering", "value": false },
           { "type": "Boolean", "name": "dragging", "value": false },
           { "type": "Numeric", "name": "bud", "value": 0 },
@@ -168,6 +184,7 @@
       "stateMachine": {
         "inputs": [
           { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
           { "type": "Boolean", "name": "hovering", "value": false },
           { "type": "Boolean", "name": "dragging", "value": false },
           { "type": "Numeric", "name": "bud", "value": 0 },
@@ -195,6 +212,7 @@
       "errors": [
         "動畫的寬高為 200 x 240, 必須是 240 x 240 (2 × canvas)",
         "動畫缺少名為 gear 的 vector slot (manifest 宣告了 gear)",
+        "state machine 缺少 input along (String)",
         "state machine 缺少 input hovering (Boolean)",
         "state machine 缺少 input dragging (Boolean)",
         "state machine 缺少 input bud (Numeric)",

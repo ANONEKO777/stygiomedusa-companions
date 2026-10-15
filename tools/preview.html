@@ -26,13 +26,17 @@
       const LEAN_SPAN = [0, 0.2];
       /** 史萊姆的 `bud` 動畫: 0.9 秒 ease-in-out (`BubbleWindow.vue` 的 `budTween`). */
       const BUD_SECONDS = 0.9;
-      /** 各邊往螢幕內側的方向, 以及從鏈端珠子往夥伴的方向 (沿螢幕邊緣). */
+      /**
+       * 各邊往螢幕內側的方向, 以及 app 可能送出的 `along` (沿螢幕邊緣從鏈端珠子往夥伴的方向): 左右邊一律往上,
+       * 上下緣依鏈在螢幕的哪一半往左或往右.
+       */
       const EDGES = {
-        right: { inward: [-1, 0], along: [0, -1] },
-        bottom: { inward: [0, -1], along: [-1, 0] },
-        left: { inward: [1, 0], along: [0, -1] },
-        top: { inward: [0, 1], along: [1, 0] },
+        right: { inward: [-1, 0], alongs: ['up'] },
+        bottom: { inward: [0, -1], alongs: ['left', 'right'] },
+        left: { inward: [1, 0], alongs: ['up'] },
+        top: { inward: [0, 1], alongs: ['right', 'left'] },
       };
+      const DIRECTIONS = { up: [0, -1], left: [-1, 0], right: [1, 0] };
 
       const span = (value, [from, to]) => Math.min(1, Math.max(0, (value - from) / (to - from)));
       const easeOutBack = (value) => {
@@ -92,14 +96,15 @@
       }
 
       /**
-       * 一個邊的預覽: 依 app 的方式送 input, 移動畫布 (`inset`) 並寫入 `gear` slot, 在指定的時間截圖.
+       * 一個邊與方向的預覽: 依 app 的方式送 input, 移動畫布 (`inset`) 並寫入 `gear` slot, 在指定的時間截圖.
        * 截圖是合成的: 背景, 鏈端珠子 (藍), 夥伴, 螢幕外 (灰), 點擊範圍 (紅色虛線).
        */
-      async function previewEdge(manifest, data, scale, edge) {
+      async function previewEdge(manifest, data, scale, edge, along) {
         const { player, canvas } = await load(manifest, data, scale);
         const C = manifest.canvas;
         const side = 2 * C;
-        const { inward, along } = EDGES[edge];
+        const { inward } = EDGES[edge];
+        const ahead = DIRECTIONS[along];
         const state = { hovering: false, bud: 0, reducedMotion: false };
         const insetOf = () => {
           const out = span(state.bud, LEAN_SPAN);
@@ -108,11 +113,13 @@
         /** 夥伴中心在螢幕邊緣上的位置 (畫布座標): 畫布往內移 `inset`, 所以它往外移. */
         const edgePoint = () => add([C, C], inward, -insetOf());
         const gearPoint = () =>
-          manifest.gear ? add(add(edgePoint(), along, manifest.gear.gap - manifest.gap), inward, BEAD_RADIUS) : null;
+          manifest.gear ? add(add(edgePoint(), ahead, manifest.gear.gap - manifest.gap), inward, BEAD_RADIUS) : null;
         // 先寫 slot 再送 input: 進入不播放的 state (`autoplay: false`) 時只畫一次, 之後寫入的 slot 不會重畫.
+        // `along` 比 `edge` 先送, 與 app 相同.
         const send = () => {
           const gear = gearPoint();
           if (gear) player.setVectorSlot('gear', gear);
+          player.stateMachineSetStringInput('along', along);
           player.stateMachineSetStringInput('edge', edge);
           player.stateMachineSetBooleanInput('hovering', state.hovering);
           player.stateMachineSetBooleanInput('dragging', false);
@@ -153,7 +160,7 @@
           };
           const point = edgePoint();
           // 史萊姆鏈端的珠子.
-          circle(add(add(point, along, -manifest.gap), inward, BEAD_RADIUS), BEAD_RADIUS);
+          circle(add(add(point, ahead, -manifest.gap), inward, BEAD_RADIUS), BEAD_RADIUS);
           g.fillStyle = 'rgba(96, 165, 250, 0.45)';
           g.fill();
           g.drawImage(canvas, 0, 0, side, side);
@@ -179,7 +186,7 @@
             circle(gear, manifest.gear.radius);
             g.stroke();
           }
-          shots.push({ edge, name, state: player.stateMachineGetCurrentState(), bud: Number(state.bud.toFixed(3)), image: out });
+          shots.push({ view: `${edge}-${along}`, name, state: player.stateMachineGetCurrentState(), bud: Number(state.bud.toFixed(3)), image: out });
         }
 
         send();
@@ -206,27 +213,27 @@
         return shots;
       }
 
-      /** 所有邊的截圖拼成一張: 每列一個邊, 每欄一個時間點, 下方標示 state 與 bud. */
+      /** 所有截圖拼成一張: 每列一個邊與方向 (`<edge>-<along>`), 每欄一個時間點, 下方標示 state 與 bud. */
       function sheetOf(shots, side) {
-        const edges = [...new Set(shots.map((shot) => shot.edge))];
+        const views = [...new Set(shots.map((shot) => shot.view))];
         const names = [...new Set(shots.map((shot) => shot.name))];
         const label = 18;
         const head = 22;
-        const left = 64;
+        const left = 96;
         const sheet = document.createElement('canvas');
         sheet.width = left + names.length * side;
-        sheet.height = head + edges.length * (side + label);
+        sheet.height = head + views.length * (side + label);
         const g = sheet.getContext('2d');
         g.fillStyle = '#ffffff';
         g.fillRect(0, 0, sheet.width, sheet.height);
         g.fillStyle = '#18181b';
         g.font = '13px sans-serif';
         names.forEach((name, column) => g.fillText(name, left + column * side + 6, 16));
-        edges.forEach((edge, row) => {
+        views.forEach((view, row) => {
           const top = head + row * (side + label);
           g.fillStyle = '#18181b';
-          g.fillText(edge, 6, top + side / 2);
-          for (const shot of shots.filter((item) => item.edge === edge)) {
+          g.fillText(view, 6, top + side / 2);
+          for (const shot of shots.filter((item) => item.view === view)) {
             const x = left + names.indexOf(shot.name) * side;
             g.drawImage(shot.image, x, top, side, side);
             g.strokeStyle = '#d4d4d8';
@@ -243,7 +250,9 @@
       window.preview = async ({ manifest, lottie, scale, edges }) => {
         const data = decode(lottie);
         const shots = [];
-        for (const edge of edges) shots.push(...(await previewEdge(manifest, data, scale, edge)));
+        for (const edge of edges) {
+          for (const along of EDGES[edge].alongs) shots.push(...(await previewEdge(manifest, data, scale, edge, along)));
+        }
         return {
           shots: shots.map(({ image, ...shot }) => ({ ...shot, png: image.toDataURL('image/png') })),
           sheet: sheetOf(shots, 2 * manifest.canvas).toDataURL('image/png'),

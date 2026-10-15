@@ -1,5 +1,5 @@
-// 預覽夥伴包: 在 headless 瀏覽器中以 app 相同版本的 dotLottie runtime 播放四個邊的閒置, hover 吐出齒輪, 含著,
-// 吸回與減少動態, 截圖到 `preview/<id>/`. `sheet.png` 是所有截圖拼成的一張, 適合直接交給 AI 看.
+// 預覽夥伴包: 在 headless 瀏覽器中以 app 相同版本的 dotLottie runtime 播放四個邊 (上下緣各兩個 `along`) 的閒置,
+// hover 吐出齒輪, 含著, 吸回與減少動態, 截圖到 `preview/<id>/`. `sheet.png` 是所有截圖拼成的一張, 適合直接交給 AI 看.
 //
 //   npm run preview -- <資料夾 | .companion 檔> [--browser chromium|msedge|chrome] [--scale 2] [--edges right,top]
 //
@@ -92,12 +92,12 @@ try {
   rmSync(out, { recursive: true, force: true });
   mkdirSync(out, { recursive: true });
   const save = (name, url) => writeFileSync(join(out, name), Buffer.from(url.split(',')[1], 'base64'));
-  for (const shot of result.shots) save(`${shot.edge}-${shot.name}.png`, shot.png);
+  for (const shot of result.shots) save(`${shot.view}-${shot.name}.png`, shot.png);
   save('sheet.png', result.sheet);
   const report = result.shots.map(({ png, ...shot }) => shot);
   writeFileSync(join(out, 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log(`已寫出 ${out}: sheet.png, ${result.shots.length} 張截圖與 report.json`);
-  for (const shot of report) console.log(`  ${shot.edge.padEnd(6)} ${shot.name.padEnd(9)} state ${shot.state}, bud ${shot.bud}`);
+  for (const shot of report) console.log(`  ${shot.view.padEnd(12)} ${shot.name.padEnd(9)} state ${shot.state}, bud ${shot.bud}`);
 } catch (error) {
   console.error(`預覽失敗: ${error.message}`);
   process.exitCode = 1;

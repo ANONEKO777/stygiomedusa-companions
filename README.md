@@ -1,8 +1,14 @@
-# 夥伴包製作工具包
+# Stygiomedusa 夥伴包
 
-夥伴包是一個 `.companion` 檔 (zip), 讓 Stygiomedusa 的史萊姆旁邊多一隻夥伴. app 負責夥伴的位置, 點擊, 探出縮回與整體的柔軟身體; 夥伴包只提供外觀與原地的動作. 夥伴包不能執行任何程式碼.
+夥伴包是一個 `.companion` 檔 (zip), 讓 [Stygiomedusa](https://github.com/seanmars/stygiomedusa-release) 的史萊姆旁邊多一隻夥伴. app 負責夥伴的位置, 點擊, 探出縮回與整體的柔軟身體; 夥伴包只提供外觀與原地的動作. 夥伴包不能執行任何程式碼.
 
-這個資料夾是完整的製作工具包, 可以整個複製出去單獨使用 (不需要 Stygiomedusa 的原始碼或 Rust). 也可以把整個資料夾交給 AI, 請它依照這份文件製作新的夥伴. 取得方式: clone [stygiomedusa-companions](https://github.com/seanmars/stygiomedusa-companions), 工具包在其中的 `companion-tool/`.
+這個資料夾是完整的製作工具包 (不需要 Stygiomedusa 的原始碼或 Rust). 也可以把整個資料夾交給 AI, 請它依照這份文件製作新的夥伴. 取得方式: clone [stygiomedusa-companions](https://github.com/seanmars/stygiomedusa-companions), 工具包就是 repo 的根目錄.
+
+## 使用夥伴包
+
+1. 下載 `.companion` 檔. 做好的夥伴包在各夥伴的資料夾中, 例如 `companionk/companionk.companion`.
+2. 在 Stygiomedusa 的 popup 史萊姆分頁按「匯入夥伴包」.
+3. 從「夥伴」選單選擇.
 
 ## 需要的工具
 
@@ -39,8 +45,9 @@
 | `tools/cases.json` | 驗證規則的案例 (`selftest` 使用) |
 | `tools/preview.mjs`, `tools/preview.html` | 預覽: 以 app 相同的 runtime 播放並截圖 |
 | `package.json`, `package-lock.json` | Node 的套件與指令 |
+| 其他資料夾 | 做好的夥伴, 例如 `companionk/`: 產生腳本, 產生的檔案與 `.companion`. 不屬於工具包, 同步時不變 |
 
-產物 (`build/`, `preview/`, `*.companion`) 不進版本控制.
+產物 (`build/`, `preview/`, 這個資料夾中的 `*.companion`) 不進版本控制.
 
 ## 指令
 
@@ -59,14 +66,14 @@
 
 - `--browser chromium|msedge|chrome`: 預設 `chromium`.
 - `--scale 2`: 截圖的解析度倍數.
-- `--edges right,bottom,left,top`: 只預覽部分的邊.
+- `--edges right,bottom,left,top`: 只預覽部分的邊; 上下緣各預覽兩個 `along`.
 
 ## 製作流程
 
 1. 複製 `tools/template.mjs` 為新的腳本 (例如 `tools/my-companion.mjs`), 改掉輸出資料夾, manifest 的 `id`, `name`, `author`, 再改外觀與動作.
 2. 產生: `node tools/my-companion.mjs my-companion`.
 3. 驗證: `npm run validate -- my-companion`. 依照原因修正後重新產生.
-4. 預覽: `npm run preview -- my-companion`, 打開 `preview/<id>/sheet.png` 檢查四個邊的每個畫面.
+4. 預覽: `npm run preview -- my-companion`, 打開 `preview/<id>/sheet.png` 檢查四個邊 (上下緣各兩個方向) 的每個畫面.
 5. 打包: `npm run pack -- my-companion`.
 6. 在 Stygiomedusa 的 popup 史萊姆分頁按「匯入夥伴包」, 再從「夥伴」選單選擇.
 
@@ -129,17 +136,25 @@ const animation = { /* ... */ slots: gearSlots(), layers: [gear, body] };
 
 - 動畫的寬高都是 `2 × canvas`, 1 個動畫單位等於 1 個邏輯 px.
 - 畫布中心 `(canvas, canvas)` 是夥伴中心. 閒置時夥伴中心在螢幕邊緣上, 畫布靠螢幕外的一半看不到.
-- app 不旋轉也不鏡像畫布. 夥伴包依 `edge` 畫出各邊的姿勢, 例如停在右邊時臉要畫在中心的左側 (螢幕內側).
+- app 不旋轉也不鏡像畫布. 夥伴包依 `edge` 與 `along` 畫出各邊的姿勢, 例如停在右邊時臉要畫在中心的左側 (螢幕內側).
 - 鏈端的珠子 (半徑 42) 中心在螢幕內側 42 的位置, 沿螢幕邊緣離夥伴 `gap`. 齒輪中心也在螢幕內側 42, 沿邊在夥伴的另一側, 離珠子 `gear.gap`.
 
-| `edge` | 螢幕內側的方向 | 從珠子往夥伴的方向 |
-|---|---|---|
-| `right` | 左 (-x) | 上 (-y) |
-| `left` | 右 (+x) | 上 (-y) |
-| `bottom` | 上 (-y) | 左 (-x) |
-| `top` | 下 (+y) | 右 (+x) |
+夥伴在鏈的哪一端:
 
-夥伴停在角落旁時, 珠子或齒輪可能繞到另一條邊; 驗證規則已經保證齒輪仍在畫布內.
+- 停在左邊或右邊: 鏈的上方.
+- 停在上緣或下緣: 往螢幕中間. 鏈中點在左半邊或正中間時在鏈的右方, 在右半邊時在鏈的左方.
+- 鏈橫跨角落 (L 形): 左上角在上緣鏈的右方, 右上角在上緣鏈的左方, 右下角在右邊鏈的上方, 左下角在左邊鏈的上方.
+
+app 以 `along` 告訴夥伴包從珠子往夥伴的方向:
+
+| `edge` | 螢幕內側的方向 | 從珠子往夥伴的方向 (`along`) |
+|---|---|---|
+| `right` | 左 (-x) | 上 (-y), `up` |
+| `left` | 右 (+x) | 上 (-y), `up` |
+| `bottom` | 上 (-y) | 左 (-x) `left` 或右 (+x) `right` |
+| `top` | 下 (+y) | 右 (+x) `right` 或左 (-x) `left` |
+
+夥伴停在角落旁時, 珠子或齒輪可能繞到另一條邊; `edge` 與 `along` 以夥伴所在的邊為準 (例如右邊靠近右上角時, 夥伴繞到上緣, `edge` 為 `top`, `along` 為 `left`). 驗證規則已經保證齒輪仍在畫布內.
 
 ## input 與 slot
 
@@ -148,6 +163,7 @@ state machine 必須宣告以下 input (型別要相同). 可以另外宣告自�
 | input | 型別 | 說明 |
 |---|---|---|
 | `edge` | String | 所在的邊: `top`, `right`, `bottom`, `left` |
+| `along` | String | 沿所在的邊從鏈往夥伴 (再往齒輪) 的方向: `up`, `left`, `right`; 左右邊一律是 `up` (見「畫布座標系」). app 先送 `along` 再送 `edge` |
 | `hovering` | Boolean | 游標在史萊姆上 |
 | `dragging` | Boolean | 拖曳中; 這時 app 把夥伴縮回螢幕外 |
 | `bud` | Numeric | 齒輪的進度, 0 到 1: hover 時以 0.9 秒 ease-in-out 往 1, 離開或拖曳時往 0 |
@@ -174,7 +190,7 @@ state machine 必須宣告以下 input (型別要相同). 可以另外宣告自�
 | `gear.gap ≥ gap + radius + gear.radius` | 齒輪在夥伴之外 |
 | `max(BEAD_RADIUS − lean × radius, 0) + (gear.gap − gap) + gear.radius ≤ canvas` | 齒輪在畫布內, 包含夥伴停在角落旁, 齒輪繞到另一條邊的時候 |
 | 動畫寬高都是 `2 × canvas` | 畫布座標與邏輯 px 一比一 |
-| state machine 宣告上面五個 input, 型別相同 | input 契約 |
+| state machine 宣告上面六個 input, 型別相同 | input 契約 |
 | 有 `gear` 時動畫有 `gear` vector slot | 齒輪位置 |
 | 每個 state 都有 `transitions` 陣列, 沒有轉換時寫 `[]` | dotLottie runtime 缺少時無法載入 state machine |
 | `kicks` 的 state 都存在 | 避免拼錯而沒有效果 |
@@ -202,11 +218,12 @@ state machine 必須宣告以下 input (型別要相同). 可以另外宣告自�
 - hover: `open-*` 張嘴, `bud ≥ 0.2` 後 `spit-*` 吐出齒輪, `hold-*` 含著齒輪; 離開時 `gulp-*` 吸回, `bud < 0.2` 回到閒置.
 - 減少動態: `still-*` 與 `stillGear-*` 的 `autoplay` 為 false, 停在單一畫面.
 - 換邊: 停著的 state 依 `edge` 換成另一邊的同一種 state.
+- 方向: 麻糬沿邊左右對稱, 齒輪位置由 `gear` slot 決定, 所以宣告 `along` 但不依它分支. 吐出物的路徑依方向而不同時, 要依 `along` 分成不同的 state.
 - `step` 是範本自己的 input: `OnComplete` 時設為 1, 表示這個區段播完.
 
 ## 預覽
 
-`npm run preview -- <資料夾>` 先執行 `validate` (不通過仍然預覽), 再以 headless 瀏覽器載入 app 使用的 `@lottiefiles/dotlottie-web` 0.81.0, 依 input 契約播放. 每個邊截六張:
+`npm run preview -- <資料夾>` 先執行 `validate` (不通過仍然預覽), 再以 headless 瀏覽器載入 app 使用的 `@lottiefiles/dotlottie-web` 0.81.0, 依 input 契約播放. 每個邊與方向 (`<edge>-<along>`, 上下緣各兩個方向) 截六張:
 
 | 截圖 | 時間點 |
 |---|---|
@@ -229,14 +246,14 @@ state machine 必須宣告以下 input (型別要相同). 可以另外宣告自�
 
 - 用腳本產生 `animation.json` 與 `state-machine.json`, 不要手寫大型 JSON. 從 `tools/template.mjs` 開始改.
 - 每次修改後依序執行 `validate` 與 `preview`, 並打開 `preview/<id>/sheet.png` 檢查畫面. 驗證通過不代表畫面正確.
-- 檢查 `sheet.png` 的項目: 四個邊的臉都朝螢幕內側; 夥伴的主要部分在灰色區域外; `spit`, `hold`, `stillGear` 的齒輪在紅色虛線圓內; `idle` 與 `still` 沒有齒輪; `report.json` 的 state 符合預期.
+- 檢查 `sheet.png` 的項目: 四個邊的臉都朝螢幕內側; 上下緣兩個方向的吐出物都從嘴飛向齒輪; 夥伴的主要部分在灰色區域外; `spit`, `hold`, `stillGear` 的齒輪在紅色虛線圓內; `idle` 與 `still` 沒有齒輪; `report.json` 的 state 符合預期.
 - 齒輪使用 `tools/gear.mjs`; 自己畫虛線時用平頭 (`lc: 1`).
 - 不使用 expressions; 每個 state 都要有 `transitions` (可以是 `[]`).
 - 角色要是原創的, 不使用他人的角色或商標.
 
 ## 維護
 
-工具包在 Stygiomedusa 的 repo (不公開) 中開發. 發版後以 `pnpm companion:publish` 把 app 版本的 tag 中的工具包同步到 stygiomedusa-companions 的 `companion-tool/`. 不要在 stygiomedusa-companions 直接修改 `companion-tool/`: 下次同步會覆寫.
+工具包在 Stygiomedusa 的 repo (不公開) 中開發. 發版後以 `pnpm companion:publish` 把 app 版本的 tag 中的工具包同步到 stygiomedusa-companions 的根目錄. 同步只取代工具包的頂層項目 (`tools/`, `mochi/`, `package.json`, `README.md` 等), 夥伴的資料夾不變. 不要在 stygiomedusa-companions 直接修改工具包的檔案: 下次同步會覆寫.
 
 以下在 Stygiomedusa 的 repo 中進行:
 

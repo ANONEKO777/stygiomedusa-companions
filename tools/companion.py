@@ -39,6 +39,7 @@ UNPACKED_LIMIT = 20 * 1024 * 1024
 GEAR_SLOT = "gear"
 INPUTS = [
     ("edge", "String"),
+    ("along", "String"),
     ("hovering", "Boolean"),
     ("dragging", "Boolean"),
     ("bud", "Numeric"),
