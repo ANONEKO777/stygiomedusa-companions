@@ -1,6 +1,6 @@
-// 產生範本夥伴「麻糬」: Lottie JSON, state machine 與 manifest, 寫到工具包的 `mochi/` (或第一個參數的資料夾).
+// 產生範本夥伴「麻糬」: Lottie JSON, state machine 與 manifest, 寫到 `companion-tool/mochi/` (或第一個參數的資料夾).
 // 產物可以用 Lottie 工具 (例如 Glaxnimate) 開啟編輯, 再以 `uv run tools/companion.py pack` 打包.
-// `npm run template` (在工具包的資料夾); 在 stygiomedusa 根目錄是 `pnpm companion:template`.
+// `npm run template` (在 companion-tool/); 在 stygiomedusa 根目錄是 `pnpm companion:template`.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

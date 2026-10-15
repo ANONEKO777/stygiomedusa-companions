@@ -1,5 +1,5 @@
 node_modules/
-# 預覽與打包的產物. 只忽略這個資料夾中的 .companion: 夥伴資料夾中的夥伴包要進版本控制.
+# 預覽與打包的產物
 build/
 preview/
-/*.companion
+*.companion

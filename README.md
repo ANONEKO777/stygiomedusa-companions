@@ -1,14 +1,8 @@
-# Stygiomedusa 夥伴包
+# 夥伴包製作工具包
 
-夥伴包是一個 `.companion` 檔 (zip), 讓 [Stygiomedusa](https://github.com/seanmars/stygiomedusa-release) 的史萊姆旁邊多一隻夥伴. app 負責夥伴的位置, 點擊, 探出縮回與整體的柔軟身體; 夥伴包只提供外觀與原地的動作. 夥伴包不能執行任何程式碼.
+夥伴包是一個 `.companion` 檔 (zip), 讓 Stygiomedusa 的史萊姆旁邊多一隻夥伴. app 負責夥伴的位置, 點擊, 探出縮回與整體的柔軟身體; 夥伴包只提供外觀與原地的動作. 夥伴包不能執行任何程式碼.
 
-這個資料夾是完整的製作工具包 (不需要 Stygiomedusa 的原始碼或 Rust). 也可以把整個資料夾交給 AI, 請它依照這份文件製作新的夥伴. 取得方式: clone [stygiomedusa-companions](https://github.com/seanmars/stygiomedusa-companions), 工具包就是 repo 的根目錄.
-
-## 使用夥伴包
-
-1. 下載 `.companion` 檔. 做好的夥伴包在各夥伴的資料夾中, 例如 `companionk/companionk.companion`.
-2. 在 Stygiomedusa 的 popup 史萊姆分頁按「匯入夥伴包」.
-3. 從「夥伴」選單選擇.
+這個資料夾是完整的製作工具包, 可以整個複製出去單獨使用 (不需要 Stygiomedusa 的原始碼或 Rust). 也可以把整個資料夾交給 AI, 請它依照這份文件製作新的夥伴. 取得方式: clone [stygiomedusa-companions](https://github.com/seanmars/stygiomedusa-companions), 工具包在其中的 `companion-tool/`.
 
 ## 需要的工具
 
@@ -45,9 +39,8 @@
 | `tools/cases.json` | 驗證規則的案例 (`selftest` 使用) |
 | `tools/preview.mjs`, `tools/preview.html` | 預覽: 以 app 相同的 runtime 播放並截圖 |
 | `package.json`, `package-lock.json` | Node 的套件與指令 |
-| 其他資料夾 | 做好的夥伴, 例如 `companionk/`: 產生腳本, 產生的檔案與 `.companion`. 不屬於工具包, 同步時不變 |
 
-產物 (`build/`, `preview/`, 這個資料夾中的 `*.companion`) 不進版本控制.
+產物 (`build/`, `preview/`, `*.companion`) 不進版本控制.
 
 ## 指令
 
@@ -243,7 +236,7 @@ state machine 必須宣告以下 input (型別要相同). 可以另外宣告自�
 
 ## 維護
 
-工具包在 Stygiomedusa 的 repo (不公開) 中開發. 發版後以 `pnpm companion:publish` 把 app 版本的 tag 中的工具包同步到 stygiomedusa-companions 的根目錄. 同步只取代工具包的頂層項目 (`tools/`, `mochi/`, `package.json`, `README.md` 等), 夥伴的資料夾不變. 不要在 stygiomedusa-companions 直接修改工具包的檔案: 下次同步會覆寫.
+工具包在 Stygiomedusa 的 repo (不公開) 中開發. 發版後以 `pnpm companion:publish` 把 app 版本的 tag 中的工具包同步到 stygiomedusa-companions 的 `companion-tool/`. 不要在 stygiomedusa-companions 直接修改 `companion-tool/`: 下次同步會覆寫.
 
 以下在 Stygiomedusa 的 repo 中進行:
 
