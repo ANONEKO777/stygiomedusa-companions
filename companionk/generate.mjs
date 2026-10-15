@@ -5,7 +5,8 @@
 // 與原本不同之處 (dotLottie 的限制):
 // - 只有一條時間軸: 搖擺的週期改為與呼吸相同的 2.8 秒; 閒置動作只在每 2.8 秒一輪結束時抽籤, 停留時間固定 1 秒.
 // - 吐出與吸回依時間播放, 時間由史萊姆 `bud` 的 0.9 秒 ease-in-out 換算; 中途反向時改為吸回.
-// - 星星與飛回的齒輪從嘴出發的位置依邊預先計算, 夥伴在角落旁時只是近似 (落點仍是 app 給的齒輪位置).
+// - 星星與飛回的齒輪從嘴出發的位置依 `edge` 與 `along` 預先計算 (每個組合一段時間軸); 夥伴在角落旁, 齒輪繞到
+//   另一條邊時只是近似 (落點仍是 app 給的齒輪位置).
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,12 +69,22 @@ const IDLE = {
 const BUD_SECONDS = 0.9;
 
 const EDGES = {
-  right: { dir: [-1, 0], along: [0, -1], turn: 0, tilt: -1, armY: LIMBS.arm.y, front: Math.PI },
-  bottom: { dir: [0, -1], along: [-1, 0], turn: 0, tilt: 0, armY: 0, front: -Math.PI / 2 },
-  left: { dir: [1, 0], along: [0, -1], turn: 0, tilt: 1, armY: LIMBS.arm.y, front: 0 },
-  top: { dir: [0, 1], along: [1, 0], turn: 180, tilt: 0, armY: 0, front: -Math.PI / 2 },
+  right: { dir: [-1, 0], turn: 0, tilt: -1, armY: LIMBS.arm.y, front: Math.PI },
+  bottom: { dir: [0, -1], turn: 0, tilt: 0, armY: 0, front: -Math.PI / 2 },
+  left: { dir: [1, 0], turn: 0, tilt: 1, armY: LIMBS.arm.y, front: 0 },
+  top: { dir: [0, 1], turn: 180, tilt: 0, armY: 0, front: -Math.PI / 2 },
 };
-const EDGE_NAMES = Object.keys(EDGES);
+/** `along` 的方向: 沿螢幕邊緣從鏈端珠子往夥伴 (再往齒輪). */
+const DIRECTIONS = { up: [0, -1], left: [-1, 0], right: [1, 0] };
+/** app 送出的 `edge` 與 `along` 的組合 (stygiomedusa companion-pack design D11): 左右邊一律往上, 上下緣往左或往右. */
+const VIEWS = [
+  { edge: 'right', along: 'up' },
+  { edge: 'bottom', along: 'left' },
+  { edge: 'bottom', along: 'right' },
+  { edge: 'left', along: 'up' },
+  { edge: 'top', along: 'right' },
+  { edge: 'top', along: 'left' },
+].map((view) => ({ ...view, name: `${view.edge}-${view.along}` }));
 
 // --- 數學 ---
 const span = (value, [from, to]) => Math.min(1, Math.max(0, (value - from) / (to - from)));
@@ -113,14 +124,14 @@ const turned = (edge, [x, y]) => (EDGES[edge].turn === 180 ? [-x, -y] : [x, y]);
 const toCanvas = (edge, local, inset = 0) => add(add([C, C], EDGES[edge].dir, inset * R), turned(edge, local), R);
 
 /** 齒輪的位置 (不在角落時, hover 探出後的畫布座標) 與嘴; 星星與飛回的齒輪以齒輪為原點. */
-const gearAt = (edge) => add(add([C, C], EDGES[edge].along, GEAR.gap - GAP), EDGES[edge].dir, BEAD_RADIUS - LEAN * R);
-const mouthFromGear = (edge) => sub(toCanvas(edge, [0, FACE.mouth.y]), gearAt(edge));
+const gearAt = (view) => add(add([C, C], DIRECTIONS[view.along], GEAR.gap - GAP), EDGES[view.edge].dir, BEAD_RADIUS - LEAN * R);
+const mouthFromGear = (view) => sub(toCanvas(view.edge, [0, FACE.mouth.y]), gearAt(view));
 
 /** 從嘴到齒輪的弧線 (原本的 `flightPoint`), 以齒輪為原點. */
-function flight(edge, t) {
-  const from = mouthFromGear(edge);
+function flight(view, t) {
+  const from = mouthFromGear(view);
   const lift = Math.hypot(from[0], from[1]) * SPIT.arc;
-  const bend = add([from[0] / 2, from[1] / 2], EDGES[edge].dir, lift);
+  const bend = add([from[0] / 2, from[1] / 2], EDGES[view.edge].dir, lift);
   const a = (1 - t) * (1 - t);
   const b = 2 * t * (1 - t);
   return [a * from[0] + b * bend[0], a * from[1] + b * bend[1]];
@@ -183,12 +194,12 @@ function rest(time) {
 }
 
 /** 吐出 (`spitting`) 或吸回時, 依 `bud` 的星星, 小星星與齒輪 (原本的 `flight`). */
-function flightState(edge, bud, spitting, landed, time) {
+function flightState(view, bud, spitting, landed, time) {
   const t = span(bud, SPIT.flight);
-  const along = flight(edge, t);
+  const along = flight(view, t);
   if (landed) {
     if (!spitting && t <= 0) return { star: null, sparkles: [], gear: null };
-    const toward = mouthFromGear(edge);
+    const toward = mouthFromGear(view);
     const pull = spitting && t >= 1 ? INHALE.tremble * (0.6 + 0.4 * Math.sin(time * INHALE.fast) * Math.sin(time * INHALE.slow)) : 0;
     const distance = Math.hypot(...sub(toward, along)) || 1;
     const at = add(along, sub(toward, along), pull / distance);
@@ -219,29 +230,29 @@ function inhaleLines(edge, time) {
 }
 
 /** 吐出的過程 (`bud` 從 `from` 往 1): 張嘴, 探出整顆頭時回正, 星星飛出, 炸開成齒輪. */
-function spitting(edge, bud, time, landed) {
+function spitting(view, bud, time, landed) {
   const state = rest(time);
   state.out = span(bud, SPIT.lean);
   state.open = span(bud, SPIT.open);
-  Object.assign(state, flightState(edge, bud, true, landed, time));
+  Object.assign(state, flightState(view, bud, true, landed, time));
   state.inhaling = state.open > 0.5 && landed;
   state.pumping = state.inhaling;
-  if (state.pumping) state.lines = inhaleLines(edge, time);
+  if (state.pumping) state.lines = inhaleLines(view.edge, time);
   return state;
 }
 
 /** 吸回 (`bud` 從 1 往 0): 齒輪沿弧線飛回嘴裡並縮小, 鼓頰吞下, 閉嘴. */
-function swallowing(edge, bud, time) {
+function swallowing(view, bud, time) {
   const state = rest(time);
   state.out = span(bud, SPIT.lean);
   state.open = span(bud, [SWALLOW.puff[1], SWALLOW.puff[1] + 0.05]);
   state.puff = Math.sin(Math.PI * span(bud, SWALLOW.puff));
-  Object.assign(state, flightState(edge, bud, false, true, time));
+  Object.assign(state, flightState(view, bud, false, true, time));
   state.inhaling = state.open > 0.5;
   return state;
 }
 
-/** 區段: 長度 (秒) 與 `sample(edge, t)`. 閒置類的區段長度都是 2.8 秒, 呼吸與搖擺接得起來. */
+/** 區段: 長度 (秒) 與 `sample(view, t)`. 閒置類的區段長度都是 2.8 秒, 呼吸與搖擺接得起來. */
 const SEGMENTS = {
   idle: { seconds: LOOP, sample: (_, t) => rest(t) },
   blink: { seconds: LOOP, sample: (_, t) => ({ ...rest(t), blink: blinkAt(1)(t) }) },
@@ -250,13 +261,13 @@ const SEGMENTS = {
   glanceR: { seconds: LOOP, sample: (_, t) => ({ ...rest(t), look: glanceLook.right(t) }) },
   duck: { seconds: DUCK_POP, sample: (_, t) => ({ ...rest(t), inset: duckInset(t) }) },
   pop: { seconds: LOOP - DUCK_POP, sample: (_, t) => ({ ...rest(t + DUCK_POP), inset: duckInset(t + DUCK_POP) }) },
-  peekA: { seconds: LOOP, sample: (edge, t) => ({ ...rest(t), inset: peekInset(t), lean: peekLean(t), look: (EDGES[edge].tilt === 0 ? peekLook.left : EDGES[edge].tilt < 0 ? peekLook.left : peekLook.right)(t) }) },
-  peekB: { seconds: LOOP, sample: (edge, t) => ({ ...rest(t), inset: peekInset(t), lean: peekLean(t), look: (EDGES[edge].tilt === 0 ? peekLook.right : EDGES[edge].tilt < 0 ? peekLook.left : peekLook.right)(t) }) },
-  open: { seconds: OPEN_SECONDS, sample: (edge, t) => spitting(edge, budAt(t), t, false) },
+  peekA: { seconds: LOOP, sample: (view, t) => ({ ...rest(t), inset: peekInset(t), lean: peekLean(t), look: (EDGES[view.edge].tilt === 0 ? peekLook.left : EDGES[view.edge].tilt < 0 ? peekLook.left : peekLook.right)(t) }) },
+  peekB: { seconds: LOOP, sample: (view, t) => ({ ...rest(t), inset: peekInset(t), lean: peekLean(t), look: (EDGES[view.edge].tilt === 0 ? peekLook.right : EDGES[view.edge].tilt < 0 ? peekLook.left : peekLook.right)(t) }) },
+  open: { seconds: OPEN_SECONDS, sample: (view, t) => spitting(view, budAt(t), t, false) },
   // 呼吸的時鐘在吐出結束時回到 0, 接上含著齒輪的迴圈.
-  spit: { seconds: SPIT_SECONDS, sample: (edge, t) => spitting(edge, budAt(OPEN_SECONDS + t), t - SPIT_SECONDS, budAt(OPEN_SECONDS + t) >= SPIT.burst[1]) },
-  hold: { seconds: LOOP, sample: (edge, t) => spitting(edge, 1, t, true) },
-  gulp: { seconds: BUD_SECONDS, sample: (edge, t) => swallowing(edge, 1 - budAt(t), t) },
+  spit: { seconds: SPIT_SECONDS, sample: (view, t) => spitting(view, budAt(OPEN_SECONDS + t), t - SPIT_SECONDS, budAt(OPEN_SECONDS + t) >= SPIT.burst[1]) },
+  hold: { seconds: LOOP, sample: (view, t) => spitting(view, 1, t, true) },
+  gulp: { seconds: BUD_SECONDS, sample: (view, t) => swallowing(view, 1 - budAt(t), t) },
   still: { seconds: 1 / FR, sample: () => ({ ...rest(0), still: true }) },
   stillGear: { seconds: 1 / FR, sample: () => ({ ...rest(0), still: true, gear: { at: [0, 0], scale: 1, spin: 0 } }) },
 };
@@ -266,9 +277,9 @@ const SEGMENT_NAMES = Object.keys(SEGMENTS);
 const frames = (name) => Math.max(1, Math.round(SEGMENTS[name].seconds * FR));
 const OFFSETS = {};
 let cursor = 0;
-for (const edge of EDGE_NAMES) {
+for (const view of VIEWS) {
   for (const name of SEGMENT_NAMES) {
-    OFFSETS[`${name}-${edge}`] = cursor;
+    OFFSETS[`${name}-${view.name}`] = cursor;
     cursor += frames(name) + 1;
   }
 }
@@ -304,12 +315,13 @@ function track(name) {
   return { a: 1, k: kept.map(([t, s], index) => (index < kept.length - 1 ? { t, s, ...LINEAR } : { t, s })) };
 }
 
-for (const edge of EDGE_NAMES) {
+for (const view of VIEWS) {
+  const { edge } = view;
   for (const name of SEGMENT_NAMES) {
-    const start = OFFSETS[`${name}-${edge}`];
+    const start = OFFSETS[`${name}-${view.name}`];
     for (let frame = 0; frame <= frames(name); frame += 1) {
       const t = Math.min(SEGMENTS[name].seconds, frame / FR);
-      const state = SEGMENTS[name].sample(edge, t);
+      const state = SEGMENTS[name].sample(view, t);
       const shape = pose(edge, state);
       const at = start + frame;
       record('position', at, add([C, C], EDGES[edge].dir, state.inset * R));
@@ -477,16 +489,20 @@ const budAtLeast = guard('Numeric', 'bud', 'GreaterThanOrEqual', 0.2);
 const budBelow = guard('Numeric', 'bud', 'LessThan', 0.2);
 const rollBelow = (limit) => guard('Numeric', 'roll', 'LessThan', limit);
 
-function playback(segment, edge, { loop = false, autoplay = true, transitions = [], entry = [] } = {}) {
+function playback(segment, view, { loop = false, autoplay = true, transitions = [], entry = [] } = {}) {
   return {
-    name: `${segment}-${edge}`, type: 'PlaybackState', animation: 'companionk', segment: `${segment}-${edge}`,
+    name: `${segment}-${view}`, type: 'PlaybackState', animation: 'companionk', segment: `${segment}-${view}`,
     loop, autoplay, entryActions: [set('step', 0), ...entry], transitions,
   };
 }
-const moveEdge = (edge, segment) => EDGE_NAMES.filter((other) => other !== edge).map((other) => to(`${segment}-${other}`, guard('String', 'edge', 'Equal', other)));
-const acting = (edge, next) => ({
+/** 換邊或換方向: 停著的 state 換成 `edge` 與 `along` 都相符的那一組. */
+const moveView = (view, segment) =>
+  VIEWS.filter((other) => other.name !== view).map((other) =>
+    to(`${segment}-${other.name}`, guard('String', 'edge', 'Equal', other.edge), guard('String', 'along', 'Equal', other.along)),
+  );
+const acting = (view, next) => ({
   entry: [set('roll', 1)],
-  transitions: [to(`still-${edge}`, reduced(true)), to(`open-${edge}`, hovering(true)), ...moveEdge(edge, 'idle'), to(next, step)],
+  transitions: [to(`still-${view}`, reduced(true)), to(`open-${view}`, hovering(true)), ...moveView(view, 'idle'), to(next, step)],
 });
 
 /**
@@ -501,35 +517,36 @@ const draws = cumulative.map(([name, share]) => {
   return [name, Math.round(sum * 10000) / 10000];
 });
 
-const states = EDGE_NAMES.flatMap((edge) => [
-  playback('idle', edge, {
+const states = VIEWS.map((view) => view.name).flatMap((view) => [
+  playback('idle', view, {
     loop: true,
     transitions: [
-      to(`still-${edge}`, reduced(true)),
-      to(`open-${edge}`, hovering(true)),
-      ...moveEdge(edge, 'idle'),
-      ...draws.map(([name, limit]) => to(`${name}-${edge}`, rollBelow(limit))),
+      to(`still-${view}`, reduced(true)),
+      to(`open-${view}`, hovering(true)),
+      ...moveView(view, 'idle'),
+      ...draws.map(([name, limit]) => to(`${name}-${view}`, rollBelow(limit))),
     ],
   }),
-  ...['blink', 'blink2', 'glanceL', 'glanceR', 'peekA', 'peekB'].map((name) => playback(name, edge, acting(edge, `idle-${edge}`))),
-  playback('duck', edge, acting(edge, `pop-${edge}`)),
-  playback('pop', edge, { transitions: [to(`still-${edge}`, reduced(true)), to(`open-${edge}`, hovering(true)), ...moveEdge(edge, 'idle'), to(`idle-${edge}`, step)] }),
-  playback('open', edge, { transitions: [to(`still-${edge}`, reduced(true)), to(`idle-${edge}`, hovering(false)), to(`spit-${edge}`, budAtLeast)] }),
-  playback('spit', edge, { transitions: [to(`still-${edge}`, reduced(true)), to(`gulp-${edge}`, hovering(false)), to(`hold-${edge}`, step)] }),
-  playback('hold', edge, { loop: true, transitions: [to(`still-${edge}`, reduced(true)), to(`gulp-${edge}`, hovering(false))] }),
-  playback('gulp', edge, { transitions: [to(`still-${edge}`, reduced(true)), to(`spit-${edge}`, hovering(true), budAtLeast), to(`idle-${edge}`, step)] }),
-  playback('still', edge, { autoplay: false, transitions: [to(`idle-${edge}`, reduced(false)), ...moveEdge(edge, 'still'), to(`stillGear-${edge}`, hovering(true), budAtLeast)] }),
-  playback('stillGear', edge, { autoplay: false, transitions: [to(`idle-${edge}`, reduced(false)), to(`still-${edge}`, budBelow)] }),
+  ...['blink', 'blink2', 'glanceL', 'glanceR', 'peekA', 'peekB'].map((name) => playback(name, view, acting(view, `idle-${view}`))),
+  playback('duck', view, acting(view, `pop-${view}`)),
+  playback('pop', view, { transitions: [to(`still-${view}`, reduced(true)), to(`open-${view}`, hovering(true)), ...moveView(view, 'idle'), to(`idle-${view}`, step)] }),
+  playback('open', view, { transitions: [to(`still-${view}`, reduced(true)), to(`idle-${view}`, hovering(false)), to(`spit-${view}`, budAtLeast)] }),
+  playback('spit', view, { transitions: [to(`still-${view}`, reduced(true)), to(`gulp-${view}`, hovering(false)), to(`hold-${view}`, step)] }),
+  playback('hold', view, { loop: true, transitions: [to(`still-${view}`, reduced(true)), to(`gulp-${view}`, hovering(false))] }),
+  playback('gulp', view, { transitions: [to(`still-${view}`, reduced(true)), to(`spit-${view}`, hovering(true), budAtLeast), to(`idle-${view}`, step)] }),
+  playback('still', view, { autoplay: false, transitions: [to(`idle-${view}`, reduced(false)), ...moveView(view, 'still'), to(`stillGear-${view}`, hovering(true), budAtLeast)] }),
+  playback('stillGear', view, { autoplay: false, transitions: [to(`idle-${view}`, reduced(false)), to(`still-${view}`, budBelow)] }),
 ]);
 const completes = ['blink', 'blink2', 'glanceL', 'glanceR', 'duck', 'pop', 'peekA', 'peekB', 'spit', 'gulp'];
-const interactions = EDGE_NAMES.flatMap((edge) => [
-  { type: 'OnLoopComplete', stateName: `idle-${edge}`, actions: [{ type: 'SetRandom', inputName: 'roll', min: 0, max: 1 }] },
-  ...completes.map((name) => ({ type: 'OnComplete', stateName: `${name}-${edge}`, actions: [set('step', 1)] })),
+const interactions = VIEWS.map((view) => view.name).flatMap((view) => [
+  { type: 'OnLoopComplete', stateName: `idle-${view}`, actions: [{ type: 'SetRandom', inputName: 'roll', min: 0, max: 1 }] },
+  ...completes.map((name) => ({ type: 'OnComplete', stateName: `${name}-${view}`, actions: [set('step', 1)] })),
 ]);
 const stateMachine = {
-  initial: 'idle-right',
+  initial: 'idle-right-up',
   inputs: [
     { type: 'String', name: 'edge', value: 'right' },
+    { type: 'String', name: 'along', value: 'up' },
     { type: 'Boolean', name: 'hovering', value: false },
     { type: 'Boolean', name: 'dragging', value: false },
     { type: 'Numeric', name: 'bud', value: 0 },
@@ -552,7 +569,7 @@ const manifest = {
   lean: LEAN,
   gear: GEAR,
   jiggle: { stiffness: 260, damping: 7, thin: JIGGLE_THIN, appear: 2.8, hide: -1.8, spit: -2.6, gulp: 2.2 },
-  kicks: Object.fromEntries(EDGE_NAMES.flatMap((edge) => [[`duck-${edge}`, -1.8], [`pop-${edge}`, 2.8]])),
+  kicks: Object.fromEntries(VIEWS.flatMap((view) => [[`duck-${view.name}`, -1.8], [`pop-${view.name}`, 2.8]])),
 };
 
 mkdirSync(OUT, { recursive: true });

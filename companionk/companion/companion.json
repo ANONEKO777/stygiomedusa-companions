@@ -21,13 +21,17 @@
     "gulp": 2.2
   },
   "kicks": {
-    "duck-right": -1.8,
-    "pop-right": 2.8,
-    "duck-bottom": -1.8,
-    "pop-bottom": 2.8,
-    "duck-left": -1.8,
-    "pop-left": 2.8,
-    "duck-top": -1.8,
-    "pop-top": 2.8
+    "duck-right-up": -1.8,
+    "pop-right-up": 2.8,
+    "duck-bottom-left": -1.8,
+    "pop-bottom-left": 2.8,
+    "duck-bottom-right": -1.8,
+    "pop-bottom-right": 2.8,
+    "duck-left-up": -1.8,
+    "pop-left-up": 2.8,
+    "duck-top-right": -1.8,
+    "pop-top-right": 2.8,
+    "duck-top-left": -1.8,
+    "pop-top-left": 2.8
   }
 }
