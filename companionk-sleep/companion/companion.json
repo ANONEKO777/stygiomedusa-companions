@@ -1,0 +1,24 @@
+{
+  "format": 1,
+  "id": "companionk-sleep",
+  "name": "夥伴K 睡眠",
+  "author": "seanmars",
+  "radius": 32,
+  "canvas": 120,
+  "gap": 75,
+  "lean": 0.8,
+  "gear": {
+    "gap": 150,
+    "radius": 24
+  },
+  "jiggle": {
+    "stiffness": 260,
+    "damping": 7,
+    "thin": 0.5,
+    "appear": 2.8,
+    "hide": -1.8,
+    "spit": -2.6,
+    "gulp": 2.2
+  },
+  "kicks": {}
+}
