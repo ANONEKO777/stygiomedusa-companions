@@ -11,6 +11,7 @@
 
 規則與原因的文字和 stygiomedusa app 匯入時相同 (`src-tauri/src/companion/`). app 的規則改變時, 要同步更新這裡與
 `cases.json`; stygiomedusa 的 Rust 測試 (`tests/companion_tool_cases.rs`) 以同一份 `cases.json` 檢查 app.
+selftest 也比對 skill 格式 reference 的契約區塊與這裡的常數; 同一個 Rust 測試檔以同一個區塊比對 app.
 """
 
 from __future__ import annotations
@@ -30,6 +31,10 @@ BEAD_RADIUS = 42.0
 END_ROOM = 214.0
 """史萊姆視窗在鏈端預留的長度 (邏輯 px)."""
 FORMAT = 1
+RADIUS_RANGE = (16.0, 48.0)
+LEAN_RANGE = (0.0, 1.0)
+GEAR_RADIUS_RANGE = (16.0, 32.0)
+"""`radius`, `lean`, `gear.radius` 允許的範圍 (含兩端)."""
 MANIFEST_FILE = "companion.json"
 LOTTIE_FILE = "companion.lottie"
 ANIMATION_SOURCE = "animation.json"
@@ -210,14 +215,14 @@ def check_manifest(m: dict) -> list[str]:
     if not m["name"].strip():
         errors.append("name 不能是空的")
     radius, canvas, gap, lean = m["radius"], m["canvas"], m["gap"], m["lean"]
-    within("radius", radius, 16.0, 48.0)
+    within("radius", radius, *RADIUS_RANGE)
     at_least("gap", gap, BEAD_RADIUS + radius, f"珠子半徑 {number_text(BEAD_RADIUS)} 加上 radius")
     at_least("canvas", canvas, radius, "radius")
     at_most("canvas", canvas, END_ROOM - gap, f"鏈端預留的 {number_text(END_ROOM)} 減去 gap")
-    within("lean", lean, 0.0, 1.0)
+    within("lean", lean, *LEAN_RANGE)
     gear = m["gear"]
     if gear is not None:
-        within("gear.radius", gear["radius"], 16.0, 32.0)
+        within("gear.radius", gear["radius"], *GEAR_RADIUS_RANGE)
         at_least("gear.gap", gear["gap"], gap + radius + gear["radius"], "gap + radius + gear.radius")
         # 齒輪在畫布內: 夥伴中心比軌道往外一個珠子半徑, 齒輪出現時已往內探出 `lean × radius`.
         offset = max(BEAD_RADIUS - lean * radius, 0.0)
@@ -491,9 +496,78 @@ def command_selftest(cases_path: Path) -> str:
         validate_files(*unpack(zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)])))
     except Rejected as rejected:
         failures.append(f"- 範本 {template}\n  {rejected.reason}")
+    contracts = check_skill_contracts(failures)
     if failures:
         raise Rejected("selftest 失敗:\n" + "\n".join(failures))
-    return f"selftest 通過: {len(cases['cases'])} 個案例與範本 (Stygiomedusa {kit_version()} 的規則)"
+    return (
+        f"selftest 通過: {len(cases['cases'])} 個案例, 範本與 {contracts} 份 skill 契約"
+        f" (Stygiomedusa {kit_version()} 的規則)"
+    )
+
+
+SKILL_DIRS = ["skills", ".claude/skills", ".agents/skills"]
+"""skill 的位置: stygiomedusa 中在 `skills/`, 發布到 stygiomedusa-companions 後在另外兩個."""
+CONTRACT_FILE = "stygio-companion/references/format.md"
+CONTRACT_BEGIN = "<!-- contract:begin -->"
+CONTRACT_END = "<!-- contract:end -->"
+
+
+def contract() -> dict:
+    """skill 格式 reference 的契約區塊應有的內容: 這裡的驗證規則使用的常數與 input."""
+    return {
+        "BEAD_RADIUS": BEAD_RADIUS,
+        "END_ROOM": END_ROOM,
+        "radius": list(RADIUS_RANGE),
+        "lean": list(LEAN_RANGE),
+        "gear.radius": list(GEAR_RADIUS_RANGE),
+        "PACK_LIMIT": PACK_LIMIT,
+        "UNPACKED_LIMIT": UNPACKED_LIMIT,
+        "inputs": [list(pair) for pair in INPUTS],
+    }
+
+
+def contract_block(text: str) -> dict:
+    """`CONTRACT_BEGIN` 與 `CONTRACT_END` 之間的 ```json 區塊."""
+    begin = text.find(CONTRACT_BEGIN)
+    end = text.find(CONTRACT_END, begin)
+    if begin < 0 or end < 0:
+        raise ValueError(f"找不到 {CONTRACT_BEGIN} 與 {CONTRACT_END}")
+    block = text[begin:end]
+    start = block.find("```json")
+    stop = block.find("```", start + 7)
+    if start < 0 or stop < 0:
+        raise ValueError("契約區塊中沒有完整的 ```json 區塊")
+    value = json.loads(block[start + 7 : stop])
+    if not isinstance(value, dict):
+        raise ValueError("契約區塊不是 JSON 物件")
+    return value
+
+
+def check_skill_contracts(failures: list[str]) -> int:
+    """比對每一份找到的 skill 契約區塊; 回傳比對的份數. 一份都沒有時也是失敗."""
+    root = Path(__file__).resolve().parent.parent
+    paths = [f"{folder}/{CONTRACT_FILE}" for folder in SKILL_DIRS]
+    found = [path for path in paths if (root / path).is_file()]
+    if not found:
+        failures.append("- 找不到 skill 的格式 reference, 找過:\n" + "\n".join(f"  {path}" for path in paths))
+        return 0
+    def text(value: Any) -> str:
+        return "(沒有)" if value is None else json.dumps(value, ensure_ascii=False)
+
+    expected = contract()
+    for path in found:
+        try:
+            actual = contract_block((root / path).read_text(encoding="utf-8"))
+        except ValueError as error:
+            failures.append(f"- {path}\n  {error}")
+            continue
+        for key in sorted(expected.keys() | actual.keys()):
+            if expected.get(key) != actual.get(key):
+                failures.append(
+                    f"- {path} 的契約區塊與驗證規則不同: {key} 應為 {text(expected.get(key))},"
+                    f" 區塊為 {text(actual.get(key))}"
+                )
+    return len(found)
 
 
 def kit_version() -> str:
