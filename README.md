@@ -59,14 +59,14 @@ AI 會在夥伴自己的資料夾 (例如 `jellyfish/`) 中建立產生腳本與
 |---|---|
 | `tools/lottie.mjs` | Lottie JSON 的基本元件 (圓, 填色, 線條, 群組); 夥伴的產生腳本使用 |
 | `tools/gear.mjs` | 預設齒輪: 與史萊姆原本的齒輪相同的外觀 |
-| `tools/companion.py` | 驗證, 打包, 組出預覽用的檔案; 規則與 app 匯入時相同 |
+| `tools/companion.py` | 驗證, 打包, 還原, 組出預覽用的檔案; 規則與 app 匯入時相同 |
 | `tools/cases.json` | 驗證規則的案例 (`selftest` 使用) |
 | `tools/preview.mjs`, `tools/preview.html` | 預覽: 以 app 相同的 runtime 播放並截圖 |
 | `skills/stygio-companion/` | 製作夥伴的 skill. 在 stygiomedusa-companions 中位於 `.claude/skills/` 與 `.agents/skills/` (兩份相同) |
 | `package.json`, `package-lock.json` | Node 的套件與指令 |
-| 其他資料夾 | 做好的夥伴, 例如 `companionk/`: 產生腳本, 產生的檔案與 `.companion`. 不屬於工具包, 同步時不變 |
+| 其他資料夾 | 做好的夥伴, 例如 `companionk/`: 產生腳本, 產生的檔案 (`companion/`) 與 `.companion`. 不屬於工具包, 同步時不變 |
 
-產物 (`build/`, `preview/`, 根目錄的 `*.companion`) 不進版本控制. 夥伴資料夾中的 `.companion` 要進版本控制.
+產物 (`build/`, `preview/`, 根目錄的 `*.companion`, 夥伴資料夾中的 `companion/`) 不進版本控制. 夥伴資料夾只保存產生腳本與 `.companion`; `.companion` 含有 `companion/` 的全部內容, 需要時以 `generate.mjs` 重新產生或以 `npm run unpack` 還原. 手動編輯 `companion/` 後要重新打包, 修改才會保存. 內容沒變時重新打包的 `.companion` 完全相同.
 
 skill 與 `tools/` 一樣屬於工具包: 不要在 stygiomedusa-companions 修改, 下次同步會覆寫. 只改了其中一份時, `npm run selftest` 也會失敗.
 
@@ -78,8 +78,9 @@ skill 與 `tools/` 一樣屬於工具包: 不要在 stygiomedusa-companions 修�
 |---|---|---|
 | `npm run validate -- <資料夾或 .companion>` | `uv run tools/companion.py validate <...>` | 驗證; 原因與 app 匯入時顯示的相同 |
 | `npm run pack -- <資料夾> [輸出]` | `uv run tools/companion.py pack <資料夾> [輸出]` | 驗證通過後產生 `.companion`; 沒有指定輸出時寫到目前目錄的 `<id>.companion` |
+| `npm run unpack -- <.companion> <資料夾> [--force]` | `uv run tools/companion.py unpack <.companion> <資料夾> [--force]` | 從夥伴包還原 `companion.json`, `animation.json`, `state-machine.json`; 資料夾已有這些檔或 `companion.lottie` 時不寫入, `--force` 時覆寫並刪除 `companion.lottie` |
 | `npm run preview -- <資料夾或 .companion> [選項]` | `node tools/preview.mjs <...> [選項]` | 預覽, 截圖到 `preview/<id>/` |
-| `npm run selftest` | `uv run tools/companion.py selftest` | 檢查驗證規則, 打包往返與 skill 的契約 |
+| `npm run selftest` | `uv run tools/companion.py selftest` | 檢查驗證規則, 打包往返, 還原與 skill 的契約 |
 | | `uv run tools/companion.py build <資料夾或 .companion> <輸出資料夾>` | 寫出 app 安裝後的 `companion.json` 與 `companion.lottie` (預覽使用) |
 
 預覽的選項:

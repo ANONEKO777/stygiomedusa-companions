@@ -3,3 +3,5 @@ node_modules/
 build/
 preview/
 /*.companion
+# 夥伴資料夾中產生的檔案: 由 generate.mjs 產生, 或以 `npm run unpack` 從夥伴包還原; 夥伴包保存同樣的內容.
+*/companion/

@@ -22,9 +22,11 @@ description: 製作或修改 Stygiomedusa 的夥伴包 (.companion): 以腳本�
 ```
 <id>/
 ├── generate.mjs        產生腳本 (以 tools/lottie.mjs 與 tools/gear.mjs 撰寫)
-├── companion/          產生的 companion.json, animation.json, state-machine.json
+├── companion/          產生的 companion.json, animation.json, state-machine.json (不進版本控制)
 └── <id>.companion      打包的夥伴包
 ```
+
+`companion/` 不進版本控制, repo 只保存 `generate.mjs` 與 `<id>.companion`; 夥伴包含有 `companion/` 的全部內容. 剛 clone 時沒有 `companion/`: 執行 `node <id>/generate.mjs` 重新產生, 或以 `npm run unpack -- <id>/<id>.companion <id>/companion` 從夥伴包還原 (手動編輯過的夥伴只能還原). 修改 `companion/` 後要打包 (步驟 5), 修改才會保存.
 
 只在夥伴的資料夾中建立或修改檔案. `tools/`, `.claude/skills/stygio-companion/`, `.agents/skills/stygio-companion/`, `package.json`, `package-lock.json`, `README.md`, `.gitignore` 屬於工具包: 工具包每次同步都會取代它們, 寫在那裡的修改會消失. 需要改工具包時, 告訴使用者, 不要自己改.
 
@@ -49,7 +51,8 @@ description: 製作或修改 Stygiomedusa 的夥伴包 (.companion): 以腳本�
 **修改**: 找到 `<id>/generate.mjs`. 改之前先檢查以下情況, 有任何一項就先告訴使用者:
 
 - `<id>/companion/companion.lottie` 存在: validate 與 pack 會直接使用它, 不讀 `animation.json` 與 `state-machine.json`. 修改產生腳本不會有效果, 除非刪除這個檔案.
-- `git status` 顯示 `<id>/companion/` 中的 JSON 有未 commit 的修改, 或使用者說過用 Glaxnimate 等工具手動編輯: 重新產生會覆寫這些修改.
+- 使用者說過用 Glaxnimate 等工具手動編輯 `<id>/companion/` 中的 JSON: 重新產生會覆寫這些修改. `companion/` 不進版本控制, `git status` 看不出有沒有手動編輯, 不確定時詢問使用者.
+- 沒有 `<id>/companion/`: 依「檔案放在哪裡」重新產生或還原. 手動編輯過的夥伴要還原, 不要重新產生.
 - 沒有 `generate.mjs`: 夥伴是手動做的. 詢問使用者要改成以腳本產生 (依建議的 state 結構撰寫, 參考現有的外觀), 還是直接修改 JSON.
 
 ## 3. 建立產生腳本 (新建時)
@@ -80,7 +83,7 @@ npm run preview -- <id>/companion --browser <步驟 1 選的瀏覽器>
 npm run pack -- <id>/companion <id>/<id>.companion
 ```
 
-一定要指定輸出路徑. 沒有指定時, 夥伴包會寫到根目錄, 而根目錄的 `.companion` 不進版本控制.
+一定要指定輸出路徑. 沒有指定時, 夥伴包會寫到根目錄, 而根目錄的 `.companion` 不進版本控制. 內容沒有改變時, 重新打包的夥伴包與原本的完全相同, `git status` 不會顯示變更.
 
 完成後告訴使用者:
 

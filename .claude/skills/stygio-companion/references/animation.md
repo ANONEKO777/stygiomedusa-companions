@@ -74,4 +74,4 @@ const animation = { /* ... */ slots: gearSlots(), layers: [gear, body] };
 
 ## 用 Lottie 工具編輯
 
-也可以用 Glaxnimate 等 Lottie 工具直接編輯 `animation.json`, 用文字編輯器編輯 `state-machine.json`, 再從 validate 繼續. 但重新執行產生腳本會覆寫手動的修改. 所以修改既有的夥伴前, 先確認使用者沒有手動編輯過這些檔案.
+也可以用 Glaxnimate 等 Lottie 工具直接編輯 `animation.json`, 用文字編輯器編輯 `state-machine.json`, 再從 validate 繼續. 但重新執行產生腳本會覆寫手動的修改. 所以修改既有的夥伴前, 先確認使用者沒有手動編輯過這些檔案. 這些檔案不進版本控制, 手動編輯後要打包, 修改才會保存在夥伴包中.

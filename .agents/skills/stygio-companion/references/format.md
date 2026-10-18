@@ -161,3 +161,5 @@ state machine 必須宣告契約區塊 `inputs` 中的每個 input, 型別要相
 `pack` 由 `animation.json` 與 `state-machine.json` 組出 `companion.lottie`. 動畫的 id 是 manifest 的 `id`, state machine 的 id 是 `companion`. 所以每個 state 的 `animation` 都要填 manifest 的 `id`.
 
 夥伴資料夾中也可以放一個已經做好的 `companion.lottie`. 它存在時, 驗證與打包直接使用它, 不讀 `animation.json` 與 `state-machine.json`.
+
+`unpack` 是 `pack` 的反向: 從夥伴包寫出 `companion.json`, `animation.json`, `state-machine.json`, bytes 與打包時相同, 還原後再打包得到相同的夥伴包. 只接受上面的 `.lottie` 結構 (正好三個檔). 目標資料夾已有這三個檔或 `companion.lottie` 時不寫入; 加 `--force` 時覆寫, 並刪除 `companion.lottie`.

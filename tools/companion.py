@@ -7,6 +7,7 @@
     uv run tools/companion.py validate <資料夾 | .companion 檔>
     uv run tools/companion.py pack <資料夾> [輸出的 .companion 檔]
     uv run tools/companion.py build <資料夾 | .companion 檔> <輸出資料夾>
+    uv run tools/companion.py unpack <.companion 檔> <資料夾> [--force]
     uv run tools/companion.py selftest [cases.json]
 
 規則與原因的文字和 stygiomedusa app 匯入時相同 (`src-tauri/src/companion/`). app 的規則改變時, 要同步更新這裡與
@@ -358,11 +359,20 @@ def validate_files(manifest_bytes: bytes, lottie: bytes) -> dict:
 # --- 資料夾與夥伴包檔 (`companion`, `companion::store`) ---
 
 
+FIXED_DATE_TIME = (1980, 1, 1, 0, 0, 0)
+"""打包時每個檔的時間戳; 與 app 的 zip 相同, 內容相同時打包的 bytes 就相同."""
+
+
 def zip_files(files: list[tuple[str, bytes]]) -> bytes:
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
         for name, data in files:
-            archive.writestr(name, data)
+            # 固定的時間戳與建立的系統 (預設依打包的時間與作業系統而不同).
+            info = zipfile.ZipInfo(name, date_time=FIXED_DATE_TIME)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 0
+            info.external_attr = 0
+            archive.writestr(info, data)
     return buffer.getvalue()
 
 
@@ -446,6 +456,7 @@ USAGE = """用法:
   uv run tools/companion.py validate <資料夾 | .companion 檔>
   uv run tools/companion.py pack <資料夾> [輸出的 .companion 檔]
   uv run tools/companion.py build <資料夾 | .companion 檔> <輸出資料夾>
+  uv run tools/companion.py unpack <.companion 檔> <資料夾> [--force]
   uv run tools/companion.py selftest [cases.json]"""
 
 
@@ -474,6 +485,47 @@ def command_build(source: Path, out: Path) -> str:
     (out / MANIFEST_FILE).write_bytes(manifest_bytes)
     (out / LOTTIE_FILE).write_bytes(lottie)
     return f"已寫出 {out / MANIFEST_FILE} 與 {out / LOTTIE_FILE} ({manifest['name']} {manifest['id']})"
+
+
+def unpack_to(pack: bytes, out: Path, force: bool) -> dict:
+    """從夥伴包寫出製作中的資料夾的三個檔 (與打包時的 bytes 相同). 只接受打包指令產生的 `.lottie` 版面, 還原後再打包
+    才會相同. 目標已有這些檔或 `companion.lottie` 時不寫入, `force` 時覆寫並刪除 `companion.lottie` (它優先於還原的檔)."""
+    manifest_bytes, lottie = unpack(pack)
+    manifest = parse_manifest(manifest_bytes)
+    names = {"manifest.json", f"a/{manifest['id']}.json", "s/companion.json"}
+    try:
+        archive = zipfile.ZipFile(io.BytesIO(lottie))
+    except zipfile.BadZipFile:
+        raise Rejected("companion.lottie 不是有效的 dotLottie (zip)") from None
+    with archive:
+        if set(archive.namelist()) != names:
+            listed = ", ".join(sorted(names))
+            raise Rejected(f"companion.lottie 不是打包指令產生的 (應只有 {listed}), 無法還原成 {ANIMATION_SOURCE} 與 {STATE_MACHINE_SOURCE}")
+        animation = read_entry(archive, f"a/{manifest['id']}.json")
+        state_machine = read_entry(archive, "s/companion.json")
+    existing = [name for name in (MANIFEST_FILE, ANIMATION_SOURCE, STATE_MACHINE_SOURCE, LOTTIE_FILE) if (out / name).exists()]
+    if existing and not force:
+        listed = "\n".join(f"  {out / name}" for name in existing)
+        raise Rejected(f"以下檔案已存在, 沒有覆寫 (要覆寫請加 --force):\n{listed}")
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        (out / MANIFEST_FILE).write_bytes(manifest_bytes)
+        (out / ANIMATION_SOURCE).write_bytes(animation)
+        (out / STATE_MACHINE_SOURCE).write_bytes(state_machine)
+        (out / LOTTIE_FILE).unlink(missing_ok=True)
+    except OSError as error:
+        raise Rejected(f"無法寫入 {out}: {error}") from None
+    return manifest
+
+
+def command_unpack(source: Path, out: Path, force: bool) -> str:
+    try:
+        pack = source.read_bytes()
+    except OSError:
+        raise Rejected(f"找不到 {source}") from None
+    manifest = unpack_to(pack, out, force)
+    names = ", ".join((MANIFEST_FILE, ANIMATION_SOURCE, STATE_MACHINE_SOURCE))
+    return f"已還原 {names} 到 {out} ({manifest['name']} {manifest['id']})"
 
 
 def merge_patch(target: Any, patch: Any) -> Any:
@@ -514,16 +566,79 @@ def command_selftest(cases_path: Path) -> str:
             (folder / name).write_text(json.dumps(base[key], ensure_ascii=False), encoding="utf-8")
         try:
             manifest_bytes, lottie = read_dir(folder)
-            validate_files(*unpack(zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)])))
+            pack = zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)])
+            validate_files(*unpack(pack))
+            check_fixed_pack(folder, pack, failures)
+            check_unpack(folder, pack, failures)
         except Rejected as rejected:
             failures.append(f"- 打包往返\n  {rejected.reason}")
     contracts = check_skill_contracts(failures)
     if failures:
         raise Rejected("selftest 失敗:\n" + "\n".join(failures))
     return (
-        f"selftest 通過: {len(cases['cases'])} 個案例, 打包往返與 {contracts} 份 skill 契約"
+        f"selftest 通過: {len(cases['cases'])} 個案例, 打包往返, 還原與 {contracts} 份 skill 契約"
         f" (Stygiomedusa {kit_version()} 的規則)"
     )
+
+
+def zip_headers(data: bytes) -> list[tuple[str, tuple, int]]:
+    """zip 中每個檔的 (名稱, 時間戳, 建立的系統); 是 `.lottie` 的檔再往內列出."""
+    headers = []
+    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+        for info in archive.infolist():
+            headers.append((info.filename, info.date_time, info.create_system))
+            if info.filename.endswith(".lottie"):
+                headers.extend(zip_headers(archive.read(info)))
+    return headers
+
+
+def check_fixed_pack(folder: Path, pack: bytes, failures: list[str]) -> None:
+    """內容相同時打包的 bytes 相同: 再組一次要相同, 每個檔的時間戳與建立的系統都是固定值 (不依打包的時間與系統)."""
+    manifest_bytes, lottie = read_dir(folder)
+    if zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)]) != pack:
+        failures.append("- 打包兩次相同\n  同一個資料夾打包兩次的 bytes 不同")
+    for name, date_time, system in zip_headers(pack):
+        if date_time != FIXED_DATE_TIME or system != 0:
+            failures.append(f"- 打包兩次相同\n  {name} 的時間戳為 {date_time}, 建立的系統為 {system}; 應為 {FIXED_DATE_TIME} 與 0")
+
+
+def check_unpack(folder: Path, pack: bytes, failures: list[str]) -> None:
+    """還原: 三個檔與打包前相同, 再打包相同; 目標已有檔案時不寫入; `--force` 覆寫並刪除 `companion.lottie`;
+    不是打包指令產生的 `.lottie` 版面時拒絕."""
+    sources = (MANIFEST_FILE, ANIMATION_SOURCE, STATE_MACHINE_SOURCE)
+    expected = {name: (folder / name).read_bytes() for name in sources}
+
+    restored = folder / "restored"
+    unpack_to(pack, restored, force=False)
+    if any((restored / name).read_bytes() != expected[name] for name in sources):
+        failures.append("- 還原\n  還原出的檔案與打包前不同")
+    manifest_bytes, lottie = read_dir(restored)
+    if zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)]) != pack:
+        failures.append("- 還原\n  還原後再打包的 bytes 與原本不同")
+
+    existing = folder / "existing"
+    existing.mkdir()
+    (existing / ANIMATION_SOURCE).write_bytes(b"old")
+    (existing / LOTTIE_FILE).write_bytes(b"old")
+    try:
+        unpack_to(pack, existing, force=False)
+        failures.append("- 還原\n  目標已有檔案時沒有拒絕")
+    except Rejected as rejected:
+        if ANIMATION_SOURCE not in rejected.reason or LOTTIE_FILE not in rejected.reason:
+            failures.append(f"- 還原\n  拒絕的原因沒有列出已存在的檔案: {rejected.reason}")
+    if (existing / ANIMATION_SOURCE).read_bytes() != b"old" or (existing / MANIFEST_FILE).exists():
+        failures.append("- 還原\n  拒絕時改變了目標資料夾")
+
+    unpack_to(pack, existing, force=True)
+    if any((existing / name).read_bytes() != expected[name] for name in sources) or (existing / LOTTIE_FILE).exists():
+        failures.append("- 還原\n  --force 沒有取代三個檔並刪除 companion.lottie")
+
+    extra = zip_files([("manifest.json", b"{}"), ("a/sample.json", b"{}"), ("s/companion.json", b"{}"), ("i/x.png", b"")])
+    try:
+        unpack_to(zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, extra)]), folder / "extra", force=False)
+        failures.append("- 還原\n  .lottie 有其他檔案時沒有拒絕")
+    except Rejected:
+        pass
 
 
 SKILL_DIRS = ["skills", ".claude/skills", ".agents/skills"]
@@ -610,6 +725,10 @@ def main(args: list[str]) -> int:
                 output = command_pack(Path(folder), Path(out))
             case ["build", source, out]:
                 output = command_build(Path(source), Path(out))
+            case ["unpack", source, out]:
+                output = command_unpack(Path(source), Path(out), force=False)
+            case ["unpack", source, out, "--force"]:
+                output = command_unpack(Path(source), Path(out), force=True)
             case ["selftest"]:
                 output = command_selftest(Path(__file__).resolve().parent / "cases.json")
             case ["selftest", cases_path]:

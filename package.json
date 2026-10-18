@@ -1,6 +1,6 @@
 {
   "name": "stygiomedusa-companion-tool",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "private": true,
   "description": "Stygiomedusa 夥伴包的製作工具包: 產生 Lottie 的元件, 驗證, 打包與預覽",
   "type": "module",
@@ -10,6 +10,7 @@
   "scripts": {
     "validate": "uv run tools/companion.py validate",
     "pack": "uv run tools/companion.py pack",
+    "unpack": "uv run tools/companion.py unpack",
     "selftest": "uv run tools/companion.py selftest",
     "preview": "node tools/preview.mjs",
     "setup:browser": "playwright install chromium"
