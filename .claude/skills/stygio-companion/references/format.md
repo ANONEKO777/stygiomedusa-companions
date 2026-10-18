@@ -33,7 +33,12 @@
     ["dragging", "Boolean"],
     ["bud", "Numeric"],
     ["reducedMotion", "Boolean"]
-  ]
+  ],
+  "optionalInputs": [
+    ["exit", "Event"],
+    ["enter", "Event"]
+  ],
+  "exitedState": "exited"
 }
 ```
 <!-- contract:end -->
@@ -43,6 +48,8 @@
 - `radius`, `lean`, `gear.radius`: 對應 manifest 欄位允許的範圍 (含兩端).
 - `PACK_LIMIT`, `UNPACKED_LIMIT`: `.companion` 檔與解開後的大小上限 (bytes).
 - `inputs`: state machine 必須宣告的 input 與型別.
+- `optionalInputs`: state machine 可以選擇宣告的出場與退場 event 與型別.
+- `exitedState`: 宣告 `exit` 時必須有的 state 名稱, 進入它代表退場播完.
 
 ## manifest 欄位
 
@@ -91,7 +98,7 @@ app 以 `along` 告訴夥伴包從珠子往夥伴的方向:
 
 ## input 與 slot
 
-state machine 必須宣告契約區塊 `inputs` 中的每個 input, 型別要相同. 也可以另外宣告自己的 input.
+state machine 必須宣告契約區塊 `inputs` 中的每個 input, 型別要相同. 契約區塊 `optionalInputs` 中的 input 可以不宣告; 宣告時型別要相同. 也可以另外宣告自己的 input.
 
 | input | 型別 | 說明 |
 |---|---|---|
@@ -101,11 +108,21 @@ state machine 必須宣告契約區塊 `inputs` 中的每個 input, 型別要相
 | `dragging` | Boolean | 拖曳中; 這時 app 把夥伴縮回螢幕外 |
 | `bud` | Numeric | 齒輪的進度, 0 到 1: hover 時以 0.9 秒 ease-in-out 往 1, 離開或拖曳時往 0 |
 | `reducedMotion` | Boolean | 減少動態; 這時請停在不播放的畫面 |
+| `enter` | Event (選用) | 出場: app 把夥伴放在探出的位置後觸發 |
+| `exit` | Event (選用) | 退場: app 在原地觸發, 等夥伴包進入 `exitedState` (`exited`) |
+
+出場與退場 (選用):
+
+- app 在換夥伴, 從無加入, 改為無與移除時使用. 拖曳, 重新啟動與取代同 id 的夥伴包時不使用.
+- 沒有宣告 `enter` 時, app 從無加入時探出, 換夥伴時淡入. 沒有宣告 `exit` 時, app 改為無時縮回, 換夥伴時淡出.
+- app 觸發 `exit` 後不再送其他 input. 退場要播到 `exited` state, 那個畫面要看不到夥伴. 5 秒內沒有進入 `exited` 時, app 改為淡出.
+- 觸發 `exit` 時 state 沒有改變 (目前的 state 沒有 `exit` 的轉換), app 立即淡出. 所以每個會停留的 state 都要能轉到退場.
+- 觸發 `enter` 時 state 沒有改變, app 直接顯示目前的畫面. 減少動態時 app 仍會觸發, 建議的結構在 `still-*` 不轉換, 退場直接進入 `exited`.
 
 - hover 探出: app 依 `bud` 把畫布往螢幕內側移動. `bud` 到 0.2 時, 探出 `lean × radius`.
 - 齒輪: app 在畫布移動時更新 `gear` slot, 所以齒輪在畫面上不動. 見 `animation.md`.
 - app 事件的初速: 探出開始 (`appear`), 縮回開始 (`hide`), `bud` 往上越過 0.25 (`spit`), 往下越過 0.08 (`gulp`).
-- 隨機的閒置動作: 用 `OnLoopComplete` interaction 執行 `SetRandom`, 寫入自己的 numeric input, 再以 guard 分支. 範本的 `roll` 就是這樣. app 載入時會設定隨機的種子.
+- 隨機的閒置動作: 用 `OnLoopComplete` interaction 執行 `SetRandom`, 寫入自己的 numeric input, 再以 guard 分支. 建議的結構以 `roll` 這樣做. app 載入時會設定隨機的種子.
 
 ## 驗證規則
 
@@ -122,6 +139,8 @@ state machine 必須宣告契約區塊 `inputs` 中的每個 input, 型別要相
 | `max(BEAD_RADIUS − lean × radius, 0) + (gear.gap − gap) + gear.radius ≤ canvas` | 齒輪在畫布內, 包含夥伴停在角落旁, 齒輪繞到另一條邊的時候 |
 | 動畫寬高都是 `2 × canvas` | 畫布座標與邏輯 px 一比一 |
 | state machine 宣告契約的每個 input, 型別相同 | input 契約 |
+| 宣告 `optionalInputs` 中的 input 時, 型別相同 | app 以 Event 觸發 |
+| 宣告 `exit` 時, 有名為 `exitedState` 的 state | app 以進入它判斷退場播完 |
 | 有 `gear` 時動畫有 `gear` vector slot | 齒輪位置 |
 | 每個 state 都有 `transitions` 陣列, 沒有轉換時寫 `[]` | dotLottie runtime 缺少時無法載入 state machine |
 | `kicks` 的 state 都存在 | 避免拼錯而沒有效果 |

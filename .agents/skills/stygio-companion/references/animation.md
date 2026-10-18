@@ -1,26 +1,35 @@
 # 動畫的畫法
 
-改外觀或動作之前讀這份: 範本的時間軸怎麼切, 齒輪怎麼畫, 以及 dotLottie runtime 的重畫方式會讓哪些寫法出錯.
+改外觀或動作之前讀這份: 建議的時間軸怎麼切, 齒輪怎麼畫, 以及 dotLottie runtime 的重畫方式會讓哪些寫法出錯.
 
 ## 目錄
 
-1. 範本的 state
+1. 建議的 state 結構
 2. 預設齒輪
 3. 重畫與 keyframe
 4. 用 Lottie 工具編輯
 
-## 範本的 state
+## 建議的 state 結構
 
-`tools/template.mjs` 產生的範本「麻糬」把時間軸分成四段, 每個邊一段. 每段有 `idle`, `blink`, `duck`, `pop`, `open`, `spit`, `hold`, `gulp`, `still`, `stillGear` 等 marker. state 名稱為 `<marker>-<邊>`.
+時間軸分成四段, 每個邊一段. 每段有 `idle`, `blink`, `duck`, `pop`, `open`, `spit`, `hold`, `gulp`, `still`, `stillGear`, `enter`, `leave`, `exited` 等 marker. state 名稱為 `<marker>-<邊>`, 只有退場完成的 `exited` 不分邊.
 
 - 閒置: `idle-*` 每播完一輪抽一次 `roll`. 小於 0.2 時眨眼; 0.2 到 0.35 時縮回 (`duck-*`) 再彈出 (`pop-*`). `kicks` 讓縮回與彈出時身體壓扁與拉長.
 - hover: `open-*` 張嘴. `bud ≥ 0.2` 後 `spit-*` 吐出齒輪, `hold-*` 含著齒輪. 離開時 `gulp-*` 吸回, `bud < 0.2` 時回到閒置.
 - 減少動態: `still-*` 與 `stillGear-*` 的 `autoplay` 為 false, 停在單一畫面.
 - 換邊: 停著的 state 依 `edge` 換成另一邊的同一種 state.
-- 方向: 麻糬沿邊左右對稱, 齒輪位置由 `gear` slot 決定, 所以宣告 `along` 但不依它分支. 吐出物的路徑依方向而不同時, 要依 `along` 分成不同的 state.
-- `step` 是範本自己的 input: `OnComplete` 時設為 1, 表示這個區段播完.
+- 方向: 夥伴沿邊左右對稱時, 齒輪位置由 `gear` slot 決定, 所以宣告 `along` 但不依它分支. 吐出物的路徑依方向而不同時, 要依 `along` 分成不同的 state.
+- 出場: `idle-*` 收到 `enter` 時進入 `enter-*`, 從螢幕外跳上來, 播完回到閒置. `kicks` 讓跳上來時身體拉長.
+- 退場: 會停留的 state 收到 `exit` 時進入 `leave-*`, 沉到螢幕外, 播完進入 `exited`. `exited` 的畫面把夥伴縮成 0, 任何邊都看不到. 減少動態的 `still-*` 與 `stillGear-*` 收到 `exit` 時直接進入 `exited`.
+- `step` 是夥伴自己的 input: `OnComplete` 時設為 1, 表示這個區段播完.
 
 新的夥伴通常保留這個 state 結構, 只改外觀與各區段的動作. 這樣 hover, 減少動態與換邊的行為不用重新設計.
+
+出場與退場是選用的. 不需要時, 從 `inputs` 刪除 `enter` 與 `exit`, 並刪除 `enter-*`, `leave-*`, `exited` 與指向它們的轉換; app 會改為淡入淡出或探出縮回. 保留時注意:
+
+- Event guard 寫成 `{ "type": "Event", "inputName": "exit" }`, 不需要 `conditionType`.
+- 出場的第一幀要從看不到夥伴的姿勢開始 (例如整個在螢幕外). app 在出場開始前保持透明, state 進入後下一個畫面才顯示.
+- `exited` 的畫面要看不到夥伴: app 收到進入 `exited` 後才移除它, 中間可能還會畫出一幀.
+- 退場中 app 不再送 input, 所以 `leave-*` 不要依 `hovering`, `bud` 或 `edge` 轉換.
 
 ## 預設齒輪
 
@@ -52,7 +61,7 @@ const animation = { /* ... */ slots: gearSlots(), layers: [gear, body] };
 
 - 齒的虛線一定用平頭 (Lottie stroke 的 `lc: 1`). 圓頭 (`lc: 2`) 讓每段兩端各多出半個線寬. 線寬 0.3R 大於間隔, 齒會連成一圈.
 - 圖層的 position 是 `gear` vector slot (`"p": { "a": 0, "k": [x, y], "sid": "gear" }`), 不要拆成 x 與 y. app 會寫入齒輪中心的畫布座標; 拆開的 position 改用 scalar slot 時, dotLottie runtime 會當掉.
-- 只在 `bud ≥ 0.2` 時畫齒輪: 其他區段把 scale 設為 `[0, 0]`. 範本在 `spit` 從 0 長大, `hold` 與 `stillGear` 維持 100, `gulp` 縮小.
+- 只在 `bud ≥ 0.2` 時畫齒輪: 其他區段把 scale 設為 `[0, 0]`. 建議的結構在 `spit` 從 0 長大, `hold` 與 `stillGear` 維持 100, `gulp` 縮小.
 - 點擊範圍由 app 固定在齒輪中心, 半徑為 `gear.radius`. 畫面上的抖動與縮放不影響點擊.
 - 省略 manifest 的 `gear` 時, 史萊姆照原本的方式畫齒輪, 夥伴包不需要 `gear` slot.
 

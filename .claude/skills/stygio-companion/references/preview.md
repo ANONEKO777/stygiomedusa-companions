@@ -15,16 +15,19 @@ npm run preview -- <id>/companion [--browser chromium|msedge|chrome] [--scale 2]
 
 ## 截圖
 
-每個邊與方向 (`<edge>-<along>`; 上下緣各兩個方向) 截六張:
+每個邊與方向 (`<edge>-<along>`; 上下緣各兩個方向) 截六張; 宣告了 `enter` 與 `exit` 時另外截出場與退場:
 
 | 截圖 | 時間點 |
 |---|---|
+| `enter` | 觸發 `enter` 0.2 秒後 (宣告 `enter` 時) |
 | `idle` | 閒置 1.5 秒後 |
 | `spit` | hover 開始 0.6 秒後 (`bud` 約 0.78, 正在吐出) |
 | `hold` | `bud` 到 1 之後 1.2 秒 |
 | `gulp` | 離開 0.3 秒後 (正在吸回) |
 | `still` | 減少動態, 閒置 |
 | `stillGear` | 減少動態, hover 且 `bud` 為 1 |
+| `leave` | 回到閒置後觸發 `exit` 0.25 秒後 (宣告 `exit` 時) |
+| `exited` | 進入 `exited` 後, 最多等 5 秒 (宣告 `exit` 時) |
 
 輸出在 `preview/<id>/`:
 
@@ -48,9 +51,10 @@ npm run preview -- <id>/companion [--browser chromium|msedge|chrome] [--scale 2]
 4. `spit`, `hold`, `stillGear` 的齒輪在紅色虛線圓內.
 5. `idle` 與 `still` 沒有齒輪.
 6. `report.json` 中每張截圖的 state 符合預期 (例如 `hold` 截圖的 state 是 `hold-<邊>`).
+7. 宣告出場與退場時: `enter` 的夥伴大部分還在灰色區域, 正在出來; `leave` 正在回到灰色區域; `exited` 的 state 是 `exited`, 畫面上看不到夥伴.
 
 無法看圖時, 請使用者打開 `preview/<id>/sheet.png`, 依這份清單回報每一項. 不要只依 `report.json` 判斷畫面正確.
 
 ## 預覽沒有模擬的部分
 
-預覽只模擬直邊. 角落, 探出縮回的 spring 與柔軟身體 (`jiggle`, `kicks`) 都沒有模擬. 這些要匯入 app 確認.
+預覽只模擬直邊. 角落, 探出縮回的 spring, 柔軟身體 (`jiggle`, `kicks`) 與換夥伴時的淡入淡出都沒有模擬. 這些要匯入 app 確認.

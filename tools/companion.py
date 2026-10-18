@@ -20,6 +20,7 @@ import io
 import json
 import math
 import sys
+import tempfile
 import zipfile
 from pathlib import Path
 from typing import Any
@@ -50,6 +51,10 @@ INPUTS = [
     ("bud", "Numeric"),
     ("reducedMotion", "Boolean"),
 ]
+OPTIONAL_INPUTS = [("exit", "Event"), ("enter", "Event")]
+"""夥伴包可以選擇宣告的出場與退場 event; 宣告時型別要相同."""
+EXITED_STATE = "exited"
+"""宣告 `exit` 時必須有的 state: 進入它代表退場播完."""
 RESERVED_IDS = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10)), *(f"lpt{i}" for i in range(1, 10))}
 ID_CHARACTERS = set("abcdefghijklmnopqrstuvwxyz0123456789-")
 
@@ -305,6 +310,18 @@ def check_lottie(manifest: dict, data: bytes) -> tuple[str, str]:
                 shown_type = at(found, "type") if isinstance(at(found, "type"), str) else "?"
                 errors.append(f"state machine 的 input {name} 是 {shown_type}, 必須是 {kind}")
         states = at(machine, "states") if isinstance(at(machine, "states"), list) else []
+        events = set()
+        for name, kind in OPTIONAL_INPUTS:
+            found = next((item for item in declared if at(item, "name") == name), None)
+            if found is None:
+                continue
+            if at(found, "type") != kind:
+                shown_type = at(found, "type") if isinstance(at(found, "type"), str) else "?"
+                errors.append(f"state machine 的 input {name} 是 {shown_type}, 必須是 {kind}")
+            else:
+                events.add(name)
+        if "exit" in events and not any(at(state, "name") == EXITED_STATE for state in states):
+            errors.append(f"state machine 宣告了 input exit, 必須有名為 {EXITED_STATE} 的 state (退場完成)")
         for state in states:
             if not isinstance(at(state, "transitions"), list):
                 state_name = at(state, "name") if isinstance(at(state, "name"), str) else "?"
@@ -489,18 +506,22 @@ def command_selftest(cases_path: Path) -> str:
             actual = rejected.reason.split("\n")
         if actual != case["errors"]:
             failures.append(f"- {case['name']}\n  預期: {case['errors']}\n  實際: {actual}")
-    # 範本: 資料夾通過驗證, 打包後的夥伴包也通過匯入的檢查.
-    template = Path(__file__).resolve().parent.parent / "mochi"
-    try:
-        manifest_bytes, lottie = read_dir(template)
-        validate_files(*unpack(zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)])))
-    except Rejected as rejected:
-        failures.append(f"- 範本 {template}\n  {rejected.reason}")
+    # 打包往返: base 寫成製作中的資料夾, 組成夥伴包檔後, 通過匯入的檢查.
+    with tempfile.TemporaryDirectory() as out:
+        folder = Path(out)
+        sources = {MANIFEST_FILE: "manifest", ANIMATION_SOURCE: "animation", STATE_MACHINE_SOURCE: "stateMachine"}
+        for name, key in sources.items():
+            (folder / name).write_text(json.dumps(base[key], ensure_ascii=False), encoding="utf-8")
+        try:
+            manifest_bytes, lottie = read_dir(folder)
+            validate_files(*unpack(zip_files([(MANIFEST_FILE, manifest_bytes), (LOTTIE_FILE, lottie)])))
+        except Rejected as rejected:
+            failures.append(f"- 打包往返\n  {rejected.reason}")
     contracts = check_skill_contracts(failures)
     if failures:
         raise Rejected("selftest 失敗:\n" + "\n".join(failures))
     return (
-        f"selftest 通過: {len(cases['cases'])} 個案例, 範本與 {contracts} 份 skill 契約"
+        f"selftest 通過: {len(cases['cases'])} 個案例, 打包往返與 {contracts} 份 skill 契約"
         f" (Stygiomedusa {kit_version()} 的規則)"
     )
 
@@ -523,6 +544,8 @@ def contract() -> dict:
         "PACK_LIMIT": PACK_LIMIT,
         "UNPACKED_LIMIT": UNPACKED_LIMIT,
         "inputs": [list(pair) for pair in INPUTS],
+        "optionalInputs": [list(pair) for pair in OPTIONAL_INPUTS],
+        "exitedState": EXITED_STATE,
     }
 
 

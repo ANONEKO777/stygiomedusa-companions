@@ -58,6 +58,12 @@
       }
       const add = (a, b, scale = 1) => [a[0] + b[0] * scale, a[1] + b[1] * scale];
       const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+      /** state machine 宣告了名為 `name` 的 Event input (`stateMachineGetInputs` 回傳名稱與型別交錯的清單). */
+      function declaresEvent(player, name) {
+        const inputs = player.stateMachineGetInputs();
+        for (let i = 0; i + 1 < inputs.length; i += 2) if (inputs[i] === name && inputs[i + 1] === 'Event') return true;
+        return false;
+      }
       const wait = (seconds) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
       function decode(base64) {
@@ -190,7 +196,15 @@
         }
 
         send();
-        await wait(1.5);
+        // 出場: app 在探出的位置觸發 `enter` (先送 input, 再觸發).
+        if (declaresEvent(player, 'enter')) {
+          player.stateMachineFireEvent('enter');
+          await wait(0.2);
+          snap('enter');
+          await wait(1.3);
+        } else {
+          await wait(1.5);
+        }
         snap('idle');
         state.hovering = true;
         send();
@@ -209,6 +223,19 @@
         send();
         await wait(0.4);
         snap('stillGear');
+        // 退場: 回到閒置後觸發 `exit`, 之後不再送 input; app 等 `exited`, 5 秒沒進入就淡出.
+        if (declaresEvent(player, 'exit')) {
+          Object.assign(state, { hovering: false, bud: 0, reducedMotion: false });
+          send();
+          await wait(0.6);
+          player.stateMachineFireEvent('exit');
+          await wait(0.25);
+          snap('leave');
+          const deadline = performance.now() + 5000;
+          while (player.stateMachineGetCurrentState() !== 'exited' && performance.now() < deadline) await frame();
+          await frame();
+          snap('exited');
+        }
         player.destroy();
         return shots;
       }

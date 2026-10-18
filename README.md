@@ -31,7 +31,7 @@
 
 ## 用 skill 製作
 
-`stygio-companion` skill 涵蓋新建與修改夥伴的完整流程: 準備環境, 從範本產生, 驗證, 預覽並檢查截圖, 打包. 在這個 repo 中開啟 Claude Code (skill 在 `.claude/skills/`) 或其他支援 `.agents/skills/` 的 AI 工具, 直接描述想要的夥伴即可. 也可以用 `/stygio-companion` 明確觸發.
+`stygio-companion` skill 涵蓋新建與修改夥伴的完整流程: 準備環境, 撰寫產生腳本, 驗證, 預覽並檢查截圖, 打包. 在這個 repo 中開啟 Claude Code (skill 在 `.claude/skills/`) 或其他支援 `.agents/skills/` 的 AI 工具, 直接描述想要的夥伴即可. 也可以用 `/stygio-companion` 明確觸發.
 
 範例:
 
@@ -57,9 +57,7 @@ AI 會在夥伴自己的資料夾 (例如 `jellyfish/`) 中建立產生腳本與
 
 | 路徑 | 內容 |
 |---|---|
-| `mochi/` | 原創的範本夥伴「麻糬」: `companion.json` (manifest), `animation.json` (Lottie JSON), `state-machine.json` (dotLottie state machine) |
-| `tools/template.mjs` | 產生 `mochi/` 的腳本; 新夥伴從複製這支腳本開始 |
-| `tools/lottie.mjs` | Lottie JSON 的基本元件 (圓, 填色, 線條, 群組) |
+| `tools/lottie.mjs` | Lottie JSON 的基本元件 (圓, 填色, 線條, 群組); 夥伴的產生腳本使用 |
 | `tools/gear.mjs` | 預設齒輪: 與史萊姆原本的齒輪相同的外觀 |
 | `tools/companion.py` | 驗證, 打包, 組出預覽用的檔案; 規則與 app 匯入時相同 |
 | `tools/cases.json` | 驗證規則的案例 (`selftest` 使用) |
@@ -68,9 +66,9 @@ AI 會在夥伴自己的資料夾 (例如 `jellyfish/`) 中建立產生腳本與
 | `package.json`, `package-lock.json` | Node 的套件與指令 |
 | 其他資料夾 | 做好的夥伴, 例如 `companionk/`: 產生腳本, 產生的檔案與 `.companion`. 不屬於工具包, 同步時不變 |
 
-產物 (`build/`, `preview/`, 這個資料夾中的 `*.companion`) 不進版本控制.
+產物 (`build/`, `preview/`, 根目錄的 `*.companion`) 不進版本控制. 夥伴資料夾中的 `.companion` 要進版本控制.
 
-skill 與 `tools/`, `mochi/` 一樣屬於工具包: 不要在 stygiomedusa-companions 修改, 下次同步會覆寫. 只改了其中一份時, `npm run selftest` 也會失敗.
+skill 與 `tools/` 一樣屬於工具包: 不要在 stygiomedusa-companions 修改, 下次同步會覆寫. 只改了其中一份時, `npm run selftest` 也會失敗.
 
 ## 指令
 
@@ -78,11 +76,10 @@ skill 與 `tools/`, `mochi/` 一樣屬於工具包: 不要在 stygiomedusa-compa
 
 | npm 指令 | 直接執行 | 說明 |
 |---|---|---|
-| `npm run template -- [資料夾]` | `node tools/template.mjs [資料夾]` | 產生範本到 `mochi/` (或指定的資料夾); 會覆寫三個檔案 |
 | `npm run validate -- <資料夾或 .companion>` | `uv run tools/companion.py validate <...>` | 驗證; 原因與 app 匯入時顯示的相同 |
 | `npm run pack -- <資料夾> [輸出]` | `uv run tools/companion.py pack <資料夾> [輸出]` | 驗證通過後產生 `.companion`; 沒有指定輸出時寫到目前目錄的 `<id>.companion` |
 | `npm run preview -- <資料夾或 .companion> [選項]` | `node tools/preview.mjs <...> [選項]` | 預覽, 截圖到 `preview/<id>/` |
-| `npm run selftest` | `uv run tools/companion.py selftest` | 檢查驗證規則, 範本與 skill 的契約 |
+| `npm run selftest` | `uv run tools/companion.py selftest` | 檢查驗證規則, 打包往返與 skill 的契約 |
 | | `uv run tools/companion.py build <資料夾或 .companion> <輸出資料夾>` | 寫出 app 安裝後的 `companion.json` 與 `companion.lottie` (預覽使用) |
 
 預覽的選項:
@@ -93,14 +90,14 @@ skill 與 `tools/`, `mochi/` 一樣屬於工具包: 不要在 stygiomedusa-compa
 
 ## 維護
 
-工具包在 Stygiomedusa 的 repo (不公開) 中開發. 發版後以 `pnpm companion:publish` 把 app 版本的 tag 中的工具包同步到 stygiomedusa-companions 的根目錄. 同步只取代工具包的頂層項目 (`tools/`, `mochi/`, `package.json`, `README.md` 等) 與 skill 的資料夾 (`skills/<名稱>/` 複製到 `.claude/skills/<名稱>/` 與 `.agents/skills/<名稱>/`). 夥伴的資料夾與其他 skill 不變. 不要在 stygiomedusa-companions 直接修改工具包的檔案: 下次同步會覆寫.
+工具包在 Stygiomedusa 的 repo (不公開) 中開發. 發版後以 `pnpm cp:publish` 把 app 版本的 tag 中的工具包同步到 stygiomedusa-companions 的根目錄 (`pnpm cp:test` 則把還沒 commit 的工具包複製過去試用, 不 commit). 同步只取代工具包的頂層項目 (`tools/`, `package.json`, `README.md` 等) 與 skill 的資料夾 (`skills/<名稱>/` 複製到 `.claude/skills/<名稱>/` 與 `.agents/skills/<名稱>/`). 夥伴的資料夾與其他 skill 不變. 不要在 stygiomedusa-companions 直接修改工具包的檔案: 下次同步會覆寫.
 
 以下在 Stygiomedusa 的 repo 中進行:
 
-- `version` 由 `pnpm set-version` 與 app 一起更新. `pnpm companion:publish` 在兩者不同時拒絕發布.
+- `version` 由 `pnpm set-version` 與 app 一起更新. `pnpm cp:publish` 在兩者不同時拒絕發布; `pnpm cp:test` 不檢查.
 - `companion.py` 移植了 Stygiomedusa 的驗證規則 (`src-tauri/src/companion/`). 一致性由兩組檢查保證:
   - `tools/cases.json`: Stygiomedusa 的 Rust 測試 `tests/companion_tool_cases.rs` 以它檢查 app, `npm run selftest` 以同一份檔案檢查 `companion.py`. app 的規則或原因的文字改變時, 同步更新 `companion.py` 與 `cases.json`.
   - skill 的契約區塊 (`skills/stygio-companion/references/format.md`): 列出常數與 input 契約. 同一個 Rust 測試檔以它比對 app, selftest 以它比對 `companion.py`. app 的常數或 input 改變時, 同步更新這個區塊.
   - 兩邊都通過才表示規則一致. 契約區塊以外的說明 (例如驗證規則的公式) 不在檢查中, 規則改變時一起更新 skill 的 references.
-- 在 Stygiomedusa 的 repo 中, `pnpm companion validate|pack <資料夾>` 是 Rust 版本的同一組指令, `pnpm companion:template` 執行 `tools/template.mjs`.
+- 在 Stygiomedusa 的 repo 中, `pnpm companion validate|pack <資料夾>` 是 Rust 版本的同一組指令.
 - dotLottie runtime 的版本固定為 app 使用的版本; app 升級 `@lottiefiles/dotlottie-web` 時一起更新 `package.json`.

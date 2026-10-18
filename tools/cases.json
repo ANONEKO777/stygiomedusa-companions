@@ -3,8 +3,8 @@
   "base": {
     "manifest": {
       "format": 1,
-      "id": "mochi",
-      "name": "麻糬",
+      "id": "sample",
+      "name": "測試夥伴",
       "author": "someone",
       "radius": 32,
       "canvas": 120,
@@ -15,7 +15,7 @@
       "kicks": { "pop": 2.8, "duck": -1.8 }
     },
     "animation": {
-      "v": "5.12.0", "fr": 30, "ip": 0, "op": 60, "w": 240, "h": 240, "nm": "mochi", "ddd": 0, "assets": [],
+      "v": "5.12.0", "fr": 30, "ip": 0, "op": 60, "w": 240, "h": 240, "nm": "sample", "ddd": 0, "assets": [],
       "slots": { "gear": { "p": { "a": 0, "k": [200, 40] } } },
       "layers": [
         {
@@ -40,9 +40,9 @@
         { "type": "Boolean", "name": "reducedMotion", "value": false }
       ],
       "states": [
-        { "name": "idle", "type": "PlaybackState", "animation": "mochi", "loop": true, "autoplay": true, "transitions": [] },
-        { "name": "pop", "type": "PlaybackState", "animation": "mochi", "autoplay": true, "transitions": [] },
-        { "name": "duck", "type": "PlaybackState", "animation": "mochi", "autoplay": true, "transitions": [] }
+        { "name": "idle", "type": "PlaybackState", "animation": "sample", "loop": true, "autoplay": true, "transitions": [] },
+        { "name": "pop", "type": "PlaybackState", "animation": "sample", "autoplay": true, "transitions": [] },
+        { "name": "duck", "type": "PlaybackState", "animation": "sample", "autoplay": true, "transitions": [] }
       ]
     }
   },
@@ -102,7 +102,7 @@
       "errors": ["gear.gap 為 190, 允許的範圍是最多 186 (gap + canvas - gear.radius - 齒輪出現時夥伴中心到軌道的 0)"]
     },
     { "name": "id 是 none", "manifest": { "id": "none" }, "errors": ["id 不能是 none (代表沒有夥伴)"] },
-    { "name": "id 有其他字元", "manifest": { "id": "Mochi!" }, "errors": ["id 為 Mochi!, 只能使用小寫英文字母, 數字與連字號"] },
+    { "name": "id 有其他字元", "manifest": { "id": "Sample!" }, "errors": ["id 為 Sample!, 只能使用小寫英文字母, 數字與連字號"] },
     { "name": "id 是 Windows 保留的名稱", "manifest": { "id": "con" }, "errors": ["id 不能是 con (Windows 保留的名稱)"] },
     { "name": "不支援的 format", "manifest": { "format": 2 }, "errors": ["format 為 2, 支援的版本是 1"] },
     { "name": "format 不是整數", "manifest": { "format": 1.5 }, "errors": ["manifest 的 format 必須是整數"] },
@@ -198,9 +198,9 @@
       "name": "state 缺少 transitions",
       "stateMachine": {
         "states": [
-          { "name": "idle", "type": "PlaybackState", "animation": "mochi", "loop": true, "autoplay": true, "transitions": [] },
-          { "name": "pop", "type": "PlaybackState", "animation": "mochi", "autoplay": true },
-          { "name": "duck", "type": "PlaybackState", "animation": "mochi", "autoplay": true, "transitions": [] }
+          { "name": "idle", "type": "PlaybackState", "animation": "sample", "loop": true, "autoplay": true, "transitions": [] },
+          { "name": "pop", "type": "PlaybackState", "animation": "sample", "autoplay": true },
+          { "name": "duck", "type": "PlaybackState", "animation": "sample", "autoplay": true, "transitions": [] }
         ]
       },
       "errors": ["state machine 的 state pop 缺少 transitions (沒有轉換時寫空陣列)"]
@@ -218,6 +218,88 @@
         "state machine 缺少 input bud (Numeric)",
         "state machine 缺少 input reducedMotion (Boolean)"
       ]
+    },
+    {
+      "name": "宣告 exit 與 exited 通過",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false },
+          { "type": "Event", "name": "exit" },
+          { "type": "Event", "name": "enter" }
+        ],
+        "states": [
+          { "name": "idle", "type": "PlaybackState", "animation": "sample", "loop": true, "autoplay": true, "transitions": [] },
+          { "name": "pop", "type": "PlaybackState", "animation": "sample", "autoplay": true, "transitions": [] },
+          { "name": "duck", "type": "PlaybackState", "animation": "sample", "autoplay": true, "transitions": [] },
+          { "name": "exited", "type": "PlaybackState", "animation": "sample", "autoplay": false, "transitions": [] }
+        ]
+      },
+      "errors": []
+    },
+    {
+      "name": "只宣告 enter 通過",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false },
+          { "type": "Event", "name": "enter" }
+        ]
+      },
+      "errors": []
+    },
+    {
+      "name": "宣告 exit 但沒有 exited",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false },
+          { "type": "Event", "name": "exit" }
+        ]
+      },
+      "errors": ["state machine 宣告了 input exit, 必須有名為 exited 的 state (退場完成)"]
+    },
+    {
+      "name": "exit 不是 Event",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false },
+          { "type": "Boolean", "name": "exit" }
+        ]
+      },
+      "errors": ["state machine 的 input exit 是 Boolean, 必須是 Event"]
+    },
+    {
+      "name": "enter 不是 Event",
+      "stateMachine": {
+        "inputs": [
+          { "type": "String", "name": "edge", "value": "right" },
+          { "type": "String", "name": "along", "value": "up" },
+          { "type": "Boolean", "name": "hovering", "value": false },
+          { "type": "Boolean", "name": "dragging", "value": false },
+          { "type": "Numeric", "name": "bud", "value": 0 },
+          { "type": "Boolean", "name": "reducedMotion", "value": false },
+          { "type": "Numeric", "name": "enter" }
+        ]
+      },
+      "errors": ["state machine 的 input enter 是 Numeric, 必須是 Event"]
     }
   ]
 }
