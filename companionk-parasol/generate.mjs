@@ -1,5 +1,5 @@
 // 夥伴K 雨傘: 夥伴K 手上撐著紅白相間的雨傘 (傘尖有一顆金色的小星星). 這個能力沒有帽子.
-// 身體與動作都與夥伴K相同, 共用 companionk-core/core.mjs; 這裡只畫雨傘.
+// 身體與動作都與夥伴K相同, 共用 companionk-core/core.mjs; 這裡畫雨傘, 以及出場 (撐傘飄下來) 與退場 (被風吹走).
 // 產物寫到 ./companion/, 再於 repo 的根目錄以
 // `npm run pack -- companionk-parasol/companion companionk-parasol/companionk-parasol.companion` 打包.
 import { dirname, join } from 'node:path';
@@ -64,11 +64,64 @@ const ability = {
     ];
   },
 
+  /**
+   * 出場: 從邊冒出來, 舉高撐開的傘, 左右搖擺慢慢飄下來落地. 上下緣往上是螢幕內側;
+   * 左右邊先冒出在上面一點, 再沿著邊往下飄.
+   */
+  enter: {
+    seconds: 1.4,
+    sample(view, t, k) {
+      const { rest, span, lerp, easeOut, easeInOut, boing, EDGES, AWAY } = k;
+      const pop = 0.3;
+      const land = 1.1;
+      // 傘頂離中心約 2.7 (以半徑為 1), 飄的高度加上去要留在畫布 (半寬 3.75) 內.
+      const HEIGHT = 1.0;
+      const wall = EDGES[view.edge].dir[0] !== 0;
+      const state = rest(t - 1.4);
+      const up = easeOut(span(t, [0, pop]));
+      const drift = easeInOut(span(t, [pop, land]));
+      const height = HEIGHT * (1 - drift);
+      const sway = t < pop ? 0 : Math.sin((2 * Math.PI * (t - pop)) / 0.8) * (1 - drift);
+      if (wall) Object.assign(state, { inset: t < pop ? lerp(-AWAY, 0.45, up) : 0.45 * (1 - drift) + 0.15 * sway, slide: height });
+      else Object.assign(state, { inset: t < pop ? lerp(-AWAY, HEIGHT, up) : height, slide: 0.35 * sway });
+      const settle = easeInOut(span(t, [land, 1.4]));
+      state.spin = 10 * sway;
+      state.grip = 1 - settle;
+      state.weapon = 4 * sway;
+      state.raise = 0.7 * (1 - settle);
+      state.out = 1 - settle;
+      state.squash = boing(t - land, 0.15);
+      return state;
+    },
+  },
+
+  /** 退場: 舉起傘, 一陣風把傘吹起來, 夥伴K被帶著搖搖晃晃地飛遠 (越來越小). */
+  leave: {
+    seconds: 1.6,
+    sample(view, t, k) {
+      const { rest, span, easeIn, easeInOut, EDGES, AWAY } = k;
+      const gust = 0.3;
+      const wall = EDGES[view.edge].dir[0] !== 0;
+      const state = rest(t);
+      const hold = easeInOut(span(t, [0, gust]));
+      const u = span(t, [gust, 1.6]);
+      const height = 2.6 * u * u;
+      const sway = t < gust ? 0 : Math.sin((2 * Math.PI * (t - gust)) / 0.8) * (0.3 + u);
+      const squat = Math.sin(Math.PI * span(t, [0, gust + 0.05]));
+      if (wall) Object.assign(state, { slide: height, inset: 0.3 * sway - AWAY * easeIn(span(t, [0.8, 1.6])) });
+      else Object.assign(state, { inset: height, slide: 0.5 * sway + 1.2 * u * u });
+      Object.assign(state, { grip: hold, weapon: 4 * sway, raise: hold, out: hold, spin: 14 * sway });
+      state.squash = [1 - 0.12 * squat, 1 + 0.08 * squat];
+      state.size = 1 - easeIn(span(t, [0.7, 1.6]));
+      return state;
+    },
+  },
+
   /** 傘微微搖晃, 向外傾; hover 探出時撐正. 傘面輕輕轉動 (左右縮放). */
-  frame({ side, state, values }) {
+  frame({ side, state, values, kit }) {
     const phase = (2 * Math.PI * state.time) / 2.8;
     const sway = state.still ? 0 : Math.sin(phase);
-    values.weaponRot = side * (24 - 10 * state.out) + 4 * sway;
+    values.weaponRot = kit.aim(side * (24 - 10 * state.out) + 4 * sway, side, state);
   },
 };
 

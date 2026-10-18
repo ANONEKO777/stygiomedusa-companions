@@ -1,6 +1,7 @@
 // 夥伴K 能力變化的共用核心: 從 companionk/generate.mjs 拆出, 各能力 (劍, 傘, 睡眠, 冰, 鎚) 的 generate.mjs 呼叫 build(ability).
 // 身體, 臉, 閒置動作, 吐出星星與齒輪, 吸回, state machine 都與夥伴K相同; 能力只提供帽子 (hat), 手上的武器 (held),
 // 額外的圖層 (layers) 與逐 frame 的調整 (frame). 睡眠能力另外設 sleep: 閒置時趴下, hover 才醒來.
+// 出場與退場 (app 的 `enter` / `exit` event): 預設是夥伴K坐著星星飛進來, 跳上星星飛走; 能力可以用 enter 與 leave 換成自己的動作.
 // 這個資料夾不是夥伴, 只放共用的程式.
 //
 // 與原本不同之處 (dotLottie 的限制) 同 companionk/generate.mjs:
@@ -65,6 +66,12 @@ const IDLE = {
 };
 /** 史萊姆的齒輪進度: 0.9 秒 ease-in-out (BubbleWindow `SLIME.budTween`). */
 const BUD_SECONDS = 0.9;
+/** 出場與退場: 夥伴藏在螢幕外時離邊多遠 (以半徑為 1). 含帽子與武器, 也含 hover 探出時才觸發退場的情況. */
+const AWAY = 4;
+/** 從含著齒輪的 state 退場時, 先花這麼多秒把齒輪吸回嘴裡. */
+const RECALL = 0.4;
+/** 出場, 退場用的小星星 (畫布座標) 有幾顆. */
+const GLITTER = 10;
 
 const EDGES = {
   right: { dir: [-1, 0], turn: 0, tilt: -1, armY: LIMBS.arm.y, front: Math.PI },
@@ -103,6 +110,14 @@ function easeInOut(x) {
   }
   return bezier((lo + hi) / 2, 0, 1);
 }
+const easeIn = (x) => x * x * x;
+const easeOut = (x) => 1 - (1 - x) ** 3;
+/** 落地後的彈跳: 回傳 [沿邊的法線方向, 沿著邊] 的伸縮倍數; `tau` 是落地後的秒數. */
+const boing = (tau, amount) => {
+  if (tau < 0) return [1, 1];
+  const wobble = Math.exp(-6 * tau) * Math.cos((2 * Math.PI * tau) / 0.34);
+  return [1 - amount * wobble, 1 + 0.7 * amount * wobble];
+};
 const budAt = (seconds) => easeInOut(Math.min(1, Math.max(0, seconds / BUD_SECONDS)));
 /** `bud` 從 0 往 1 到達 `value` 的時間. */
 function budTime(value) {
@@ -120,6 +135,10 @@ const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
 const turned = (edge, [x, y]) => (EDGES[edge].turn === 180 ? [-x, -y] : [x, y]);
 /** 夥伴K座標 (以半徑為 1, 直立) 換成畫布座標; 不含歪頭 (hover 時已回正). */
 const toCanvas = (edge, local, inset = 0) => add(add([C, C], EDGES[edge].dir, inset * R), turned(edge, local), R);
+/** 沿著邊的方向 (`slide` 為正): 上下緣是夥伴的右手邊, 左右邊是往上. */
+const lateral = (edge) => (EDGES[edge].dir[0] !== 0 ? [0, -1] : turned(edge, [1, 0]));
+/** 夥伴 (或它身上的一點 `local`, 夥伴K座標) 的畫布座標: 往螢幕內側 `inset`, 沿著邊 `slide` (以半徑為 1). */
+const place = (edge, inset, slide = 0, local = [0, 0]) => add(add(add([C, C], EDGES[edge].dir, inset * R), lateral(edge), slide * R), turned(edge, local), R);
 
 /** 齒輪的位置 (不在角落時, hover 探出後的畫布座標) 與嘴; 星星與飛回的齒輪以齒輪為原點. */
 const gearAt = (view) => add(add([C, C], DIRECTIONS[view.along], GEAR.gap - GAP), EDGES[view.edge].dir, BEAD_RADIUS - LEAN * R);
@@ -186,10 +205,21 @@ const peekLook = { left: springTrack([[0, -1, IDLE.glance], [PEEK_BACK, 0, IDLE.
 const OPEN_SECONDS = budTime(0.2);
 const SPIT_SECONDS = BUD_SECONDS - OPEN_SECONDS;
 
-/** 預設的狀態: 閒置的姿勢. `time` 是呼吸與搖擺的時鐘 (秒). */
+/**
+ * 預設的狀態: 閒置的姿勢. `time` 是呼吸與搖擺的時鐘 (秒). 出場與退場另外用到: `slide` (沿著邊移動), `spin` (整隻旋轉,
+ * 度), `size` (整隻縮放), `squash` ([法線方向, 沿著邊] 的伸縮), `warp` (腳下的大星星) 與 `glitter` (小星星, 畫布座標).
+ * 拿武器的能力另外用 `weapon` (武器的角度, 往外為正) 與 `grip` (0 是平常的角度, 1 是 `weapon`), `raise` (手舉高, 0 到 1).
+ */
 function rest(time) {
-  return { time, inset: 0, lean: 0, look: 0, blink: 0, out: 0, open: 0, puff: 0, pumping: false, inhaling: false, still: false, star: null, sparkles: [], gear: null, lines: [], sleep: 0, snore: 0 };
+  return {
+    time, inset: 0, lean: 0, look: 0, blink: 0, out: 0, open: 0, puff: 0, pumping: false, inhaling: false, still: false, star: null, sparkles: [], gear: null, lines: [], sleep: 0, snore: 0,
+    slide: 0, spin: 0, size: 1, squash: [1, 1], warp: null, glitter: [], weapon: 0, grip: 0, raise: 0,
+  };
 }
+/** 武器的角度: 平常的角度 `normal` 依 `grip` 換成出場, 退場指定的 `weapon` (`side` 是拿武器那一邊). */
+const aim = (normal, side, state) => lerp(normal, side * state.weapon, state.grip);
+/** 手舉高時往上移多少 (以半徑為 1). */
+const RAISE = 0.45;
 
 /** 吐出 (`spitting`) 或吸回時, 依 `bud` 的星星, 小星星與齒輪 (原本的 `flight`). */
 function flightState(view, bud, spitting, landed, time) {
@@ -254,6 +284,90 @@ function swallowing(view, bud, time) {
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const lerp = (a, b, x) => a + (b - a) * x;
 
+/** 核心預設的出場與退場: 夥伴K坐在大星星上 (星星的中心在夥伴K座標的 `under`, 半徑 `size`). */
+const WARP = { under: 1.05, size: 1.15, swing: 1.4 };
+/** 小星星從 `from` 出現的時間 `spawn` 起, `life` 秒內縮小消失. */
+const fading = (t, spawn, life, at, size) => (t >= spawn && t < spawn + life ? { at, size: size * (1 - (t - spawn) / life) } : null);
+
+/** 出場: 坐著星星從螢幕外斜斜地飛進來, 星星炸成小星星, 夥伴K往下掉, 落地壓扁再彈回. */
+const WARP_ENTER = {
+  seconds: 1.4,
+  sample(view, t) {
+    const fly = 0.45;
+    const land = 0.75;
+    const apex = 1.7;
+    const { edge } = view;
+    // 呼吸的時鐘在出場結束時回到 0, 接上閒置.
+    const state = rest(t - WARP_ENTER.seconds);
+    state.out = 1 - easeInOut(span(t, [land, land + 0.4]));
+    const flight = (s) => {
+      const x = easeOut(Math.min(1, s / fly));
+      return { inset: lerp(-AWAY, apex, x), slide: WARP.swing * (1 - x), x };
+    };
+    const starAt = (s) => {
+      const { inset, slide } = flight(s);
+      return place(edge, inset, slide, [0, WARP.under]);
+    };
+    const trail = [0.1, 0.2, 0.3, 0.4].map((spawn) => fading(t, spawn, 0.3, starAt(spawn), 0.45));
+    if (t < fly) {
+      const { inset, slide, x } = flight(t);
+      Object.assign(state, { inset, slide, squash: [1.12, 0.92], open: 0.6 });
+      state.warp = { at: starAt(t), size: WARP.size, spin: 400 * x };
+      state.glitter = trail;
+      return state;
+    }
+    const u = span(t, [fly, land]);
+    state.inset = t < land ? apex * (1 - u * u) : 0;
+    state.open = t < land ? 0.6 : 0;
+    state.squash = t < land ? [1 + 0.1 * u, 1 - 0.07 * u] : boing(t - land, 0.3);
+    state.inhaling = t >= land && t < land + 0.2;
+    // 星星在飛到頂點時一閃, 炸成一圈小星星.
+    const pop = span(t, [fly, fly + 0.08]);
+    if (pop < 1) state.warp = { at: starAt(fly), size: WARP.size * (1 + 0.3 * pop) * (1 - pop), spin: 400 };
+    const burst = span(t, [fly, fly + 0.4]);
+    const center = starAt(fly);
+    const ring = Array.from({ length: 6 }, (_, index) => {
+      if (burst <= 0 || burst >= 1) return null;
+      const angle = (index / 6) * 2 * Math.PI + 0.4;
+      return { at: add(center, [Math.cos(angle), Math.sin(angle)], R * (0.5 + 1.6 * easeOut(burst))), size: 0.55 * (1 - burst) };
+    });
+    state.glitter = [...trail, ...ring];
+    return state;
+  },
+};
+
+/** 退場: 蹲下, 腳下冒出星星, 跳上去, 先往上衝再繞一圈衝出螢幕外, 留下一串小星星. */
+const WARP_LEAVE = {
+  seconds: 1.3,
+  sample(view, t) {
+    const crouch = 0.3;
+    const hop = 0.45;
+    const { edge } = view;
+    const state = rest(t);
+    state.out = easeInOut(span(t, [0, 0.25]));
+    const at = (s) => {
+      if (s < crouch) return { inset: 0, slide: 0 };
+      if (s < hop) return { inset: 0.5 * easeOut(span(s, [crouch, hop])), slide: 0 };
+      const d = span(s, [hop, WARP_LEAVE.seconds]);
+      return { inset: 0.5 + Math.sin(Math.PI * d) - (AWAY + 0.5) * d ** 3, slide: -WARP.swing * Math.sin(Math.PI * d) };
+    };
+    const starAt = (s) => {
+      const { inset, slide } = at(s);
+      return place(edge, inset, slide, [0, WARP.under]);
+    };
+    Object.assign(state, at(t));
+    const squat = Math.sin(Math.PI * span(t, [0, hop]));
+    state.squash = t < crouch ? [1 - 0.2 * squat, 1 + 0.14 * squat] : t < hop ? [1 + 0.1 * (1 - squat), 1 - 0.07 * (1 - squat)] : [1.12, 0.92];
+    state.open = t >= hop ? 0.6 : 0;
+    state.warp = { at: starAt(t), size: WARP.size * easeOutBack(span(t, [0, crouch])), spin: 200 * t + 500 * span(t, [hop, WARP_LEAVE.seconds]) ** 2 };
+    state.glitter = Array.from({ length: GLITTER }, (_, index) => {
+      const spawn = hop + 0.05 + index * 0.06;
+      return fading(t, spawn, 0.3, starAt(spawn), 0.45);
+    });
+    return state;
+  },
+};
+
 /** 區段: 長度 (秒) 與 `sample(view, t)`. 閒置類的區段長度都是 2.8 秒, 呼吸與搖擺接得起來. */
 const SEGMENTS = {
   idle: { seconds: LOOP, sample: (_, t) => rest(t) },
@@ -275,8 +389,10 @@ const SEGMENTS = {
   still: { seconds: 1 / FR, sample: () => ({ ...rest(0), still: true }) },
   stillGear: { seconds: 1 / FR, sample: () => ({ ...rest(0), still: true, gear: { at: [0, 0], scale: 1, spin: 0 } }) },
 };
-const AWAKE_SEGMENTS = ['idle', 'blink', 'blink2', 'glanceL', 'glanceR', 'duck', 'pop', 'peekA', 'peekB', 'open', 'spit', 'hold', 'gulp', 'still', 'stillGear'];
-const SLEEP_SEGMENTS = ['idle', 'snore', 'open', 'spit', 'hold', 'gulp', 'still', 'stillGear'];
+/** 出場與退場: `enter`, `leave` 依能力而不同 (build 時加入); `leaveGear` 先吸回齒輪再 `leave`; `exited` 整隻縮成 0. */
+const EXIT_SEGMENTS = ['enter', 'leave', 'leaveGear', 'exited'];
+const AWAKE_SEGMENTS = ['idle', 'blink', 'blink2', 'glanceL', 'glanceR', 'duck', 'pop', 'peekA', 'peekB', 'open', 'spit', 'hold', 'gulp', 'still', 'stillGear', ...EXIT_SEGMENTS];
+const SLEEP_SEGMENTS = ['idle', 'snore', 'open', 'spit', 'hold', 'gulp', 'still', 'stillGear', ...EXIT_SEGMENTS];
 
 /** 趴下的程度 (0 到 1): 閒置與減少動態趴著, hover 的 `out` 從 0 到 1 時醒來, 吸回結束時再睡著. */
 const LIE = { wide: 0.25, flat: 0.2, breath: 1.2 };
@@ -299,6 +415,10 @@ function pose(edge, state) {
     const sy = (deep ? across : along) * (1 + amount * breath) * (1 - 0.04 * state.puff);
     shape = { tilt: tilt * (1 - lie), sx, sy, eyeDx: state.look * IDLE.look, eyeOpen: 1 - 0.9 * state.blink };
   }
+  // 出場與退場的伸縮: 左右邊的法線方向是 x, 上下緣是 y.
+  const [normal, across] = state.squash;
+  shape.sx *= deep ? normal : across;
+  shape.sy *= deep ? across : normal;
   shape.sx *= 1 + LIE.wide * lie;
   shape.sy *= 1 - LIE.flat * lie;
   // 左右邊趴下時沿著邊往下沉, 讓底部不離地; 上下緣不沉, 免得趴下後整隻藏到邊的外面.
@@ -353,14 +473,29 @@ const bandPoints = (yTop, yBottom, bulge = 0.1, grow = 1.04, steps = 14) => {
   return [...line(yTop), ...line(yBottom).reverse()];
 };
 
-/** 組出夥伴包. `ability`: { id, name, sleep?, hat?(kit), held?(kit), layers?(kit), frame?(context), star? }. */
+/**
+ * 組出夥伴包. `ability`: { id, name, sleep?, hat?(kit), held?(kit), outer?(kit), layers?(kit), frame?(context), star?, enter?, leave? }.
+ * `enter` 與 `leave` 是 { seconds, sample(view, t, kit) }, 回傳那一刻的狀態 (從 `kit.rest(time)` 開始改); 省略時用星星.
+ */
 export function build(ability, outDir) {
   const { id } = ability;
   const SEGMENT_NAMES = ability.sleep ? SLEEP_SEGMENTS : AWAKE_SEGMENTS;
   const has = (name) => SEGMENT_NAMES.includes(name);
+  const enter = ability.enter ?? WARP_ENTER;
+  const leave = ability.leave ?? WARP_LEAVE;
+  const segments = {
+    ...SEGMENTS,
+    enter: { seconds: enter.seconds, sample: (view, t) => enter.sample(view, t, kit) },
+    leave: { seconds: leave.seconds, sample: (view, t) => leave.sample(view, t, kit) },
+    leaveGear: {
+      seconds: RECALL + leave.seconds,
+      sample: (view, t) => (t < RECALL ? swallowing(view, 1 - easeInOut(t / RECALL), t) : leave.sample(view, t - RECALL, kit)),
+    },
+    exited: { seconds: 1 / FR, sample: () => ({ ...rest(0), still: true, size: 0 }) },
+  };
 
   // --- 時間軸 ---
-  const frames = (name) => Math.max(1, Math.round(SEGMENTS[name].seconds * FR));
+  const frames = (name) => Math.max(1, Math.round(segments[name].seconds * FR));
   const OFFSETS = {};
   let cursor = 0;
   for (const view of VIEWS) {
@@ -392,8 +527,8 @@ export function build(ability, outDir) {
     shapes, ...extra,
   });
   const kit = {
-    R, C, FR, LOOP, COLORS, EDGES, OUTLINE, LIMBS, BEAD_RADIUS,
-    hex, span, clamp01, lerp, easeInOut, add, sub, toCanvas,
+    R, C, FR, LOOP, COLORS, EDGES, OUTLINE, LIMBS, BEAD_RADIUS, AWAY, GLITTER,
+    hex, span, clamp01, lerp, easeInOut, easeIn, easeOut, easeOutBack, boing, add, sub, toCanvas, place, lateral, rest, fading, aim,
     px, value, ellipse, fill, stroke, transform, group, path, layer, polygon, smooth, domePoints, bandPoints, onCircle, arcPoints, track,
   };
 
@@ -403,15 +538,16 @@ export function build(ability, outDir) {
     for (const name of SEGMENT_NAMES) {
       const start = OFFSETS[`${name}-${view.name}`];
       for (let frame = 0; frame <= frames(name); frame += 1) {
-        const t = Math.min(SEGMENTS[name].seconds, frame / FR);
-        const state = SEGMENTS[name].sample(view, t);
+        const t = Math.min(segments[name].seconds, frame / FR);
+        const state = segments[name].sample(view, t);
         if (ability.sleep) state.sleep = name === 'stillGear' ? 0 : 1 - state.out;
         const shape = pose(edge, state);
         const at = start + frame;
         const side = edge === 'right' ? -1 : 1;
         const values = {
-          position: add([C, C], EDGES[edge].dir, state.inset * R),
-          turn: EDGES[edge].turn,
+          position: place(edge, state.inset, state.slide),
+          turn: EDGES[edge].turn + state.spin,
+          size: [100 * state.size, 100 * state.size],
           tilt: shape.tilt,
           scale: [shape.sx * 100, shape.sy * 100],
           bodyShift: shape.shift,
@@ -424,7 +560,7 @@ export function build(ability, outDir) {
           smile: state.open > 0.05 ? 0 : 100,
           armLeft: [-LIMBS.arm.x * R, EDGES[edge].armY * R],
           armRight: [LIMBS.arm.x * R, EDGES[edge].armY * R],
-          hand: [side * LIMBS.arm.x * R, EDGES[edge].armY * R],
+          hand: [side * LIMBS.arm.x * R, (EDGES[edge].armY - RAISE * state.raise) * R],
         };
         const star = state.star;
         values.starPosition = star ? star.at : [0, 0];
@@ -439,6 +575,15 @@ export function build(ability, outDir) {
         values.gearPosition = gear ? gear.at : [0, 0];
         values.gearScale = gear ? [gear.scale * 100, gear.scale * 100] : [0, 0];
         values.gearSpin = gear ? gear.spin : 0;
+        const warp = state.warp;
+        values.warpPosition = warp ? warp.at : [C, C];
+        values.warpScale = warp ? [warp.size * 100, warp.size * 100] : [0, 0];
+        values.warpSpin = warp ? warp.spin : 0;
+        for (let index = 0; index < GLITTER; index += 1) {
+          const glitter = state.glitter[index];
+          values[`glitter${index}Position`] = glitter ? glitter.at : [C, C];
+          values[`glitter${index}Scale`] = glitter ? [glitter.size * 100, glitter.size * 100] : [0, 0];
+        }
         for (let index = 0; index < INHALE.lines; index += 1) {
           const line = state.lines[index];
           values[`line${index}Position`] = line ? toCanvas(edge, line.to) : [C, C];
@@ -548,7 +693,7 @@ export function build(ability, outDir) {
           transform({ p: value([0, px(TILT.pivot)]), a: value([0, px(TILT.pivot)]), r: track('tilt') }),
         ),
       ],
-      transform({ p: track('position'), r: track('turn') }),
+      transform({ p: track('position'), r: track('turn'), s: track('size') }),
     ),
   ]);
 
@@ -578,11 +723,20 @@ export function build(ability, outDir) {
     group(`line ${index}`, [path('line', [[0, 0], [px(INHALE.length), 0]]), stroke(COLORS.gearInk, px(0.08))], transform({ p: track(`line${index}Position`), r: track(`line${index}Angle`), o: track(`line${index}Opacity`) })),
   ));
 
+  /** 出場與退場: 夥伴K腳下的大星星 (畫在夥伴後面) 與小星星 (畫在前面), 都是畫布座標. */
+  const bigStar = STAR.map(([x, y]) => [(x / GEAR.radius) * R, (y / GEAR.radius) * R]);
+  const warpLayer = layer('warp star', 8, [group('warp star', [path('star', bigStar, { closed: true }), stroke(starColors.outline, px(OUTLINE * 1.3)), fill(starColors.fill)])], {
+    p: track('warpPosition'), s: track('warpScale'), r: track('warpSpin'),
+  });
+  const glitterLayer = layer('glitter', 7, Array.from({ length: GLITTER }, (_, index) =>
+    group(`glitter ${index}`, [path('star', bigStar.map(([x, y]) => [x / 2, y / 2]), { closed: true }), fill(starColors.fill)], transform({ p: track(`glitter${index}Position`), s: track(`glitter${index}Scale`) })),
+  ));
+
   const markers = Object.entries(OFFSETS).map(([name, tm]) => ({ cm: name, tm, dr: frames(name.split('-')[0]) }));
   const animation = {
     v: '5.12.0', fr: FR, ip: 0, op: TOTAL, w: 2 * CANVAS, h: 2 * CANVAS, nm: ability.name, ddd: 0, assets: [], markers,
     slots: { gear: { p: value([200, 40]) } },
-    layers: [anchor, starLayer, sparkles, gearLayer, lines, ...(ability.layers?.(kit) ?? []), character],
+    layers: [anchor, starLayer, sparkles, gearLayer, lines, glitterLayer, ...(ability.layers?.(kit) ?? []), character, warpLayer],
   };
 
   // --- state machine ---
@@ -595,6 +749,10 @@ export function build(ability, outDir) {
   const budAtLeast = guard('Numeric', 'bud', 'GreaterThanOrEqual', 0.2);
   const budBelow = guard('Numeric', 'bud', 'LessThan', 0.2);
   const rollBelow = (limit) => guard('Numeric', 'roll', 'LessThan', limit);
+  const fired = (inputName) => ({ type: 'Event', inputName });
+  /** 退場: 畫面上的任何動作都可以被 app 的 `exit` 打斷; 齒輪可能在外面時先吸回. */
+  const exit = (viewName) => to(`leave-${viewName}`, fired('exit'));
+  const exitGear = (viewName) => to(`leaveGear-${viewName}`, fired('exit'));
 
   function playback(segment, viewName, { loop = false, autoplay = true, transitions = [], entry = [] } = {}) {
     return {
@@ -609,7 +767,7 @@ export function build(ability, outDir) {
     );
   const acting = (viewName, next) => ({
     entry: [set('roll', 1)],
-    transitions: [to(`still-${viewName}`, reduced(true)), to(`open-${viewName}`, hovering(true)), ...moveView(viewName, 'idle'), to(next, step)],
+    transitions: [exit(viewName), to(`still-${viewName}`, reduced(true)), to(`open-${viewName}`, hovering(true)), ...moveView(viewName, 'idle'), to(next, step)],
   });
 
   /**
@@ -631,6 +789,8 @@ export function build(ability, outDir) {
     playback('idle', viewName, {
       loop: true,
       transitions: [
+        to(`enter-${viewName}`, fired('enter')),
+        exit(viewName),
         to(`still-${viewName}`, reduced(true)),
         to(`open-${viewName}`, hovering(true)),
         ...moveView(viewName, 'idle'),
@@ -641,17 +801,25 @@ export function build(ability, outDir) {
     ...(has('duck')
       ? [
           playback('duck', viewName, acting(viewName, `pop-${viewName}`)),
-          playback('pop', viewName, { transitions: [to(`still-${viewName}`, reduced(true)), to(`open-${viewName}`, hovering(true)), ...moveView(viewName, 'idle'), to(`idle-${viewName}`, step)] }),
+          playback('pop', viewName, { transitions: [exit(viewName), to(`still-${viewName}`, reduced(true)), to(`open-${viewName}`, hovering(true)), ...moveView(viewName, 'idle'), to(`idle-${viewName}`, step)] }),
         ]
       : []),
-    playback('open', viewName, { transitions: [to(`still-${viewName}`, reduced(true)), to(`idle-${viewName}`, hovering(false)), to(`spit-${viewName}`, budAtLeast)] }),
-    playback('spit', viewName, { transitions: [to(`still-${viewName}`, reduced(true)), to(`gulp-${viewName}`, hovering(false)), to(`hold-${viewName}`, step)] }),
-    playback('hold', viewName, { loop: true, transitions: [to(`still-${viewName}`, reduced(true)), to(`gulp-${viewName}`, hovering(false))] }),
-    playback('gulp', viewName, { transitions: [to(`still-${viewName}`, reduced(true)), to(`spit-${viewName}`, hovering(true), budAtLeast), to(`idle-${viewName}`, step)] }),
-    playback('still', viewName, { autoplay: false, transitions: [to(`idle-${viewName}`, reduced(false)), ...moveView(viewName, 'still'), to(`stillGear-${viewName}`, hovering(true), budAtLeast)] }),
-    playback('stillGear', viewName, { autoplay: false, transitions: [to(`idle-${viewName}`, reduced(false)), to(`still-${viewName}`, budBelow)] }),
+    playback('open', viewName, { transitions: [exit(viewName), to(`still-${viewName}`, reduced(true)), to(`idle-${viewName}`, hovering(false)), to(`spit-${viewName}`, budAtLeast)] }),
+    playback('spit', viewName, { transitions: [exitGear(viewName), to(`still-${viewName}`, reduced(true)), to(`gulp-${viewName}`, hovering(false)), to(`hold-${viewName}`, step)] }),
+    playback('hold', viewName, { loop: true, transitions: [exitGear(viewName), to(`still-${viewName}`, reduced(true)), to(`gulp-${viewName}`, hovering(false))] }),
+    playback('gulp', viewName, { transitions: [exitGear(viewName), to(`still-${viewName}`, reduced(true)), to(`spit-${viewName}`, hovering(true), budAtLeast), to(`idle-${viewName}`, step)] }),
+    // 減少動態: 出場不播放 (停在原地), 退場直接消失.
+    playback('still', viewName, { autoplay: false, transitions: [to('exited', fired('exit')), to(`idle-${viewName}`, reduced(false)), ...moveView(viewName, 'still'), to(`stillGear-${viewName}`, hovering(true), budAtLeast)] }),
+    playback('stillGear', viewName, { autoplay: false, transitions: [to('exited', fired('exit')), to(`idle-${viewName}`, reduced(false)), to(`still-${viewName}`, budBelow)] }),
+    // 出場播完回到閒置; 退場中 app 不再送 input, 播完進入 `exited` 告訴 app 退場完成.
+    playback('enter', viewName, { transitions: [exit(viewName), to(`still-${viewName}`, reduced(true)), ...moveView(viewName, 'idle'), to(`idle-${viewName}`, step)] }),
+    playback('leave', viewName, { transitions: [to('exited', step)] }),
+    playback('leaveGear', viewName, { transitions: [to('exited', step)] }),
+  ]).concat([
+    // 退場完成 (app 約定的名稱, 不分邊): 整隻縮成 0, 任何邊都看不到.
+    { name: 'exited', type: 'PlaybackState', animation: id, segment: `exited-${VIEWS[0].name}`, loop: false, autoplay: false, transitions: [] },
   ]);
-  const completes = ['blink', 'blink2', 'glanceL', 'glanceR', 'duck', 'pop', 'peekA', 'peekB', 'snore', 'spit', 'gulp'].filter(has);
+  const completes = ['blink', 'blink2', 'glanceL', 'glanceR', 'duck', 'pop', 'peekA', 'peekB', 'snore', 'spit', 'gulp', 'enter', 'leave', 'leaveGear'].filter(has);
   const interactions = VIEWS.map((view) => view.name).flatMap((viewName) => [
     { type: 'OnLoopComplete', stateName: `idle-${viewName}`, actions: [{ type: 'SetRandom', inputName: 'roll', min: 0, max: 1 }] },
     ...completes.map((name) => ({ type: 'OnComplete', stateName: `${name}-${viewName}`, actions: [set('step', 1)] })),
@@ -665,6 +833,9 @@ export function build(ability, outDir) {
       { type: 'Boolean', name: 'dragging', value: false },
       { type: 'Numeric', name: 'bud', value: 0 },
       { type: 'Boolean', name: 'reducedMotion', value: false },
+      // 選用的出場與退場 event; 宣告 `exit` 時必須有 `exited` state.
+      { type: 'Event', name: 'exit' },
+      { type: 'Event', name: 'enter' },
       { type: 'Numeric', name: 'roll', value: 1 },
       { type: 'Numeric', name: 'step', value: 0 },
     ],
@@ -683,7 +854,7 @@ export function build(ability, outDir) {
     lean: LEAN,
     gear: GEAR,
     jiggle: { stiffness: 260, damping: 7, thin: JIGGLE_THIN, appear: 2.8, hide: -1.8, spit: -2.6, gulp: 2.2 },
-    kicks: has('duck') ? Object.fromEntries(VIEWS.flatMap((view) => [[`duck-${view.name}`, -1.8], [`pop-${view.name}`, 2.8]])) : {},
+    kicks: Object.fromEntries(VIEWS.flatMap((view) => [...(has('duck') ? [[`duck-${view.name}`, -1.8], [`pop-${view.name}`, 2.8]] : []), [`enter-${view.name}`, 2.8]])),
   };
 
   mkdirSync(outDir, { recursive: true });

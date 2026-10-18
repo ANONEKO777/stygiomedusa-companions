@@ -32,6 +32,14 @@
       "value": false
     },
     {
+      "type": "Event",
+      "name": "exit"
+    },
+    {
+      "type": "Event",
+      "name": "enter"
+    },
+    {
       "type": "Numeric",
       "name": "roll",
       "value": 1
@@ -166,6 +174,39 @@
       ]
     },
     {
+      "type": "OnComplete",
+      "stateName": "enter-right-up",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leave-right-up",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leaveGear-right-up",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
       "type": "OnLoopComplete",
       "stateName": "idle-bottom-left",
       "actions": [
@@ -279,6 +320,39 @@
     {
       "type": "OnComplete",
       "stateName": "gulp-bottom-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "enter-bottom-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leave-bottom-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leaveGear-bottom-left",
       "actions": [
         {
           "type": "SetNumeric",
@@ -410,6 +484,39 @@
       ]
     },
     {
+      "type": "OnComplete",
+      "stateName": "enter-bottom-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leave-bottom-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leaveGear-bottom-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
       "type": "OnLoopComplete",
       "stateName": "idle-left-up",
       "actions": [
@@ -523,6 +630,39 @@
     {
       "type": "OnComplete",
       "stateName": "gulp-left-up",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "enter-left-up",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leave-left-up",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leaveGear-left-up",
       "actions": [
         {
           "type": "SetNumeric",
@@ -654,6 +794,39 @@
       ]
     },
     {
+      "type": "OnComplete",
+      "stateName": "enter-top-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leave-top-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leaveGear-top-right",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
       "type": "OnLoopComplete",
       "stateName": "idle-top-left",
       "actions": [
@@ -774,6 +947,39 @@
           "value": 1
         }
       ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "enter-top-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leave-top-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "OnComplete",
+      "stateName": "leaveGear-top-left",
+      "actions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 1
+        }
+      ]
     }
   ],
   "states": [
@@ -792,6 +998,26 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "enter-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "enter"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -1014,6 +1240,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-right-up",
           "guards": [
             {
@@ -1160,6 +1396,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -1310,6 +1556,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-right-up",
           "guards": [
             {
@@ -1456,6 +1712,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -1606,6 +1872,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-right-up",
           "guards": [
             {
@@ -1752,6 +2028,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -1902,6 +2188,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-right-up",
           "guards": [
             {
@@ -2043,6 +2339,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -2188,6 +2494,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-right-up",
           "guards": [
             {
@@ -2239,6 +2555,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -2294,6 +2620,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leaveGear-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-right-up",
           "guards": [
             {
@@ -2333,6 +2669,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-right-up",
@@ -2392,6 +2738,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "idle-right-up",
@@ -2531,6 +2887,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "idle-right-up",
           "guards": [
             {
@@ -2556,6 +2922,205 @@
       ]
     },
     {
+      "name": "enter-right-up",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "enter-right-up",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-right-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-right-up",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right-up",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leave-right-up",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leave-right-up",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leaveGear-right-up",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leaveGear-right-up",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "idle-bottom-left",
       "type": "PlaybackState",
       "animation": "companionk-hammer",
@@ -2570,6 +3135,26 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "enter-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "enter"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -2792,6 +3377,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-left",
           "guards": [
             {
@@ -2938,6 +3533,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -3088,6 +3693,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-left",
           "guards": [
             {
@@ -3234,6 +3849,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -3384,6 +4009,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-left",
           "guards": [
             {
@@ -3530,6 +4165,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -3680,6 +4325,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-left",
           "guards": [
             {
@@ -3821,6 +4476,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -3966,6 +4631,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-left",
           "guards": [
             {
@@ -4017,6 +4692,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -4072,6 +4757,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leaveGear-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-left",
           "guards": [
             {
@@ -4111,6 +4806,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-left",
@@ -4170,6 +4875,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "idle-bottom-left",
@@ -4309,6 +5024,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "idle-bottom-left",
           "guards": [
             {
@@ -4334,6 +5059,205 @@
       ]
     },
     {
+      "name": "enter-bottom-left",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "enter-bottom-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-bottom-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leave-bottom-left",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leave-bottom-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leaveGear-bottom-left",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leaveGear-bottom-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "idle-bottom-right",
       "type": "PlaybackState",
       "animation": "companionk-hammer",
@@ -4348,6 +5272,26 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "enter-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "enter"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -4570,6 +5514,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-right",
           "guards": [
             {
@@ -4716,6 +5670,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -4866,6 +5830,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-right",
           "guards": [
             {
@@ -5012,6 +5986,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -5162,6 +6146,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-right",
           "guards": [
             {
@@ -5308,6 +6302,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -5458,6 +6462,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-right",
           "guards": [
             {
@@ -5599,6 +6613,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -5744,6 +6768,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-right",
           "guards": [
             {
@@ -5795,6 +6829,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -5850,6 +6894,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leaveGear-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-bottom-right",
           "guards": [
             {
@@ -5889,6 +6943,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-bottom-right",
@@ -5948,6 +7012,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "idle-bottom-right",
@@ -6087,6 +7161,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "idle-bottom-right",
           "guards": [
             {
@@ -6112,6 +7196,205 @@
       ]
     },
     {
+      "name": "enter-bottom-right",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "enter-bottom-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-bottom-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-bottom-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leave-bottom-right",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leave-bottom-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leaveGear-bottom-right",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leaveGear-bottom-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "idle-left-up",
       "type": "PlaybackState",
       "animation": "companionk-hammer",
@@ -6126,6 +7409,26 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "enter-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "enter"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -6348,6 +7651,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-left-up",
           "guards": [
             {
@@ -6494,6 +7807,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -6644,6 +7967,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-left-up",
           "guards": [
             {
@@ -6790,6 +8123,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -6940,6 +8283,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-left-up",
           "guards": [
             {
@@ -7086,6 +8439,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -7236,6 +8599,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-left-up",
           "guards": [
             {
@@ -7377,6 +8750,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -7522,6 +8905,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-left-up",
           "guards": [
             {
@@ -7573,6 +8966,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -7628,6 +9031,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leaveGear-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-left-up",
           "guards": [
             {
@@ -7667,6 +9080,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-left-up",
@@ -7726,6 +9149,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "idle-left-up",
@@ -7865,6 +9298,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "idle-left-up",
           "guards": [
             {
@@ -7890,6 +9333,205 @@
       ]
     },
     {
+      "name": "enter-left-up",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "enter-left-up",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-left-up",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-left-up",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left-up",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leave-left-up",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leave-left-up",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leaveGear-left-up",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leaveGear-left-up",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "idle-top-right",
       "type": "PlaybackState",
       "animation": "companionk-hammer",
@@ -7904,6 +9546,26 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "enter-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "enter"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -8126,6 +9788,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-right",
           "guards": [
             {
@@ -8272,6 +9944,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -8422,6 +10104,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-right",
           "guards": [
             {
@@ -8568,6 +10260,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -8718,6 +10420,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-right",
           "guards": [
             {
@@ -8864,6 +10576,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -9014,6 +10736,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-right",
           "guards": [
             {
@@ -9155,6 +10887,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -9300,6 +11042,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-right",
           "guards": [
             {
@@ -9351,6 +11103,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -9406,6 +11168,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leaveGear-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-right",
           "guards": [
             {
@@ -9445,6 +11217,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-right",
@@ -9504,6 +11286,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "idle-top-right",
@@ -9643,6 +11435,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "idle-top-right",
           "guards": [
             {
@@ -9668,6 +11470,205 @@
       ]
     },
     {
+      "name": "enter-top-right",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "enter-top-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-right",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-top-right",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-right",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leave-top-right",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leave-top-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leaveGear-top-right",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leaveGear-top-right",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "idle-top-left",
       "type": "PlaybackState",
       "animation": "companionk-hammer",
@@ -9682,6 +11683,26 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "enter-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "enter"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -9904,6 +11925,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-left",
           "guards": [
             {
@@ -10050,6 +12081,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -10200,6 +12241,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-left",
           "guards": [
             {
@@ -10346,6 +12397,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -10496,6 +12557,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-left",
           "guards": [
             {
@@ -10642,6 +12713,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -10792,6 +12873,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-left",
           "guards": [
             {
@@ -10933,6 +13024,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -11078,6 +13179,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-left",
           "guards": [
             {
@@ -11129,6 +13240,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -11184,6 +13305,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "leaveGear-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "still-top-left",
           "guards": [
             {
@@ -11223,6 +13354,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leaveGear-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "still-top-left",
@@ -11282,6 +13423,16 @@
         }
       ],
       "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
         {
           "type": "Transition",
           "toState": "idle-top-left",
@@ -11421,6 +13572,16 @@
       "transitions": [
         {
           "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
           "toState": "idle-top-left",
           "guards": [
             {
@@ -11444,6 +13605,214 @@
           ]
         }
       ]
+    },
+    {
+      "name": "enter-top-left",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "enter-top-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "leave-top-left",
+          "guards": [
+            {
+              "type": "Event",
+              "inputName": "exit"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "still-top-left",
+          "guards": [
+            {
+              "type": "Boolean",
+              "inputName": "reducedMotion",
+              "conditionType": "Equal",
+              "compareTo": true
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-right-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-left",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-bottom-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "bottom"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-left-up",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "left"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "up"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-right",
+          "guards": [
+            {
+              "type": "String",
+              "inputName": "edge",
+              "conditionType": "Equal",
+              "compareTo": "top"
+            },
+            {
+              "type": "String",
+              "inputName": "along",
+              "conditionType": "Equal",
+              "compareTo": "right"
+            }
+          ]
+        },
+        {
+          "type": "Transition",
+          "toState": "idle-top-left",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leave-top-left",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leave-top-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leaveGear-top-left",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "leaveGear-top-left",
+      "loop": false,
+      "autoplay": true,
+      "entryActions": [
+        {
+          "type": "SetNumeric",
+          "inputName": "step",
+          "value": 0
+        }
+      ],
+      "transitions": [
+        {
+          "type": "Transition",
+          "toState": "exited",
+          "guards": [
+            {
+              "type": "Numeric",
+              "inputName": "step",
+              "conditionType": "Equal",
+              "compareTo": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "exited",
+      "type": "PlaybackState",
+      "animation": "companionk-hammer",
+      "segment": "exited-right-up",
+      "loop": false,
+      "autoplay": false,
+      "transitions": []
     }
   ]
 }

@@ -1,5 +1,5 @@
 // 夥伴K 鎚子: 夥伴K 額頭綁著藍白的頭巾 (結在左邊, 兩條帶子垂下來), 手上拿著木桶形的大鎚子 (桶身有一顆星星).
-// 身體與動作都與夥伴K相同, 共用 companionk-core/core.mjs; 這裡只畫頭巾與鎚子.
+// 身體與動作都與夥伴K相同, 共用 companionk-core/core.mjs; 這裡畫頭巾與鎚子, 以及出場 (跳出來砸地) 與退場 (大迴旋).
 // 產物寫到 ./companion/, 再於 repo 的根目錄以
 // `npm run pack -- companionk-hammer/companion companionk-hammer/companionk-hammer.companion` 打包.
 import { dirname, join } from 'node:path';
@@ -96,12 +96,77 @@ const ability = {
     ];
   },
 
+  /** 砸地的衝擊線: 從鎚子落地的點往上散開的四條短線. */
+  outer(k) {
+    const { hex, px, group, path, stroke, transform, track } = k;
+    const lines = [-160, -125, -55, -20].map((degrees) => {
+      const angle = (degrees * Math.PI) / 180;
+      return path('impact', [0.35, 0.8].map((radius) => [px(radius * Math.cos(angle)), px(radius * Math.sin(angle))]));
+    });
+    return [group('impact', [...lines, stroke(hex('#8a4e12'), px(0.09))], transform({ p: track('impactAt'), s: track('impactScale'), o: track('impactOpacity') }))];
+  },
+
+  /** 出場: 跳出來, 在空中把鎚子舉到頭後面, 落下時往旁邊砸地, 冒出衝擊線, 身體壓扁, 再把鎚子收回來. */
+  enter: {
+    seconds: 1.4,
+    sample(view, t, k) {
+      const { rest, span, lerp, easeIn, easeOut, easeInOut, boing, AWAY } = k;
+      const rise = 0.38;
+      const land = 0.56;
+      // 頭巾的帶子往旁邊伸出約 1.9 (以半徑為 1), 跳的高度加上去要留在畫布 (半寬 3.75) 內.
+      const apex = 1.3;
+      const state = rest(t - 1.4);
+      state.out = 1 - easeInOut(span(t, [0.95, 1.4]));
+      state.grip = 1 - easeInOut(span(t, [0.95, 1.3]));
+      if (t < rise) {
+        Object.assign(state, { inset: lerp(-AWAY, apex, easeOut(t / rise)), squash: [1.12, 0.92], weapon: -70 });
+      } else if (t < land) {
+        const u = span(t, [rise, land]);
+        Object.assign(state, { inset: apex * (1 - u * u), weapon: lerp(-70, 135, easeIn(u)), inhaling: true, squash: [1.15, 0.88] });
+      } else {
+        Object.assign(state, { weapon: 135, squash: boing(t - land, 0.32), inhaling: t < land + 0.3 });
+        state.impact = span(t, [land, land + 0.35]);
+      }
+      return state;
+    },
+  },
+
+  /** 退場: 鎚子往後拉蓄力, 原地轉起大迴旋, 越轉越快, 轉著縮回螢幕外. */
+  leave: {
+    seconds: 1.4,
+    sample(view, t, k) {
+      const { rest, span, easeIn, easeInOut, AWAY } = k;
+      const windup = 0.3;
+      const state = rest(t);
+      const ready = easeInOut(span(t, [0, windup]));
+      Object.assign(state, { out: ready, grip: ready, inhaling: t > 0.15 });
+      if (t < windup) {
+        const squat = Math.sin(Math.PI * span(t, [0, windup]));
+        Object.assign(state, { weapon: -50, squash: [1 - 0.14 * squat, 1 + 0.1 * squat] });
+        return state;
+      }
+      const u = span(t, [windup, 1.4]);
+      state.weapon = 90;
+      state.open = 0.5;
+      state.spin = 1080 * easeIn(u);
+      state.inset = t < 0.8 ? 0.5 * Math.sin(Math.PI * span(t, [windup, 0.8])) : -AWAY * easeIn(span(t, [0.8, 1.4]));
+      return state;
+    },
+  },
+
   /** 鎚子向外傾, 左右晃; hover 探出時舉高. 頭巾的帶子隨呼吸擺動. */
-  frame({ side, state, values }) {
+  frame({ side, edge, state, values, kit }) {
+    const { R, EDGES, LIMBS } = kit;
     const phase = (2 * Math.PI * state.time) / 2.8;
     const sway = state.still ? 0 : Math.sin(phase);
-    values.weaponRot = side * (16 - 8 * state.out) + 5 * sway;
+    values.weaponRot = kit.aim(side * (16 - 8 * state.out) + 5 * sway, side, state);
     values.hatSway = state.still ? 0 : 8 * Math.sin(phase - 0.9) * (1 - 0.5 * state.out);
+    // 衝擊線在鎚頭落地的點 (鎚子轉 135 度時, 鎚頭在手的斜下方 0.95, 0.95).
+    const impact = state.impact ?? 0;
+    const size = 70 + 80 * impact;
+    values.impactAt = [side * (LIMBS.arm.x + 0.95) * R, (EDGES[edge].armY + 1.2) * R];
+    values.impactScale = [size, size];
+    values.impactOpacity = impact > 0 && impact < 1 ? 100 * (1 - impact) : 0;
   },
 };
 

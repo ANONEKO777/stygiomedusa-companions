@@ -1,6 +1,7 @@
 // 夥伴K 睡眠: 夥伴K 戴著藍綠色圓點的睡帽 (奶黃色帽緣與絨球), 閒置時側躺睡覺 (原圖的姿勢): 長長的身體橫躺,
 // 臉 (閉著眼) 在頭那一端, 睡帽蓋在背上, 紅色的腳從身體的另一端露出來, 小手放在臉的前面; 旁邊冒出一串泡泡,
 // 偶爾脹出一顆鼻涕泡. hover 時醒來站起來, 張嘴吐出星星變齒輪; 離開後吞回齒輪, 再睡著.
+// 出場趴著滑進來打個哈欠; 退場沉回螢幕外, 留下往上飄的「Z」.
 // 身體的壓扁與各部位的位置由這裡的 frame 算, 核心 (companionk-core/core.mjs) 只提供各部位的 track.
 // 產物寫到 ./companion/, 再於 repo 的根目錄以
 // `npm run pack -- companionk-sleep/companion companionk-sleep/companionk-sleep.companion` 打包.
@@ -26,6 +27,8 @@ const LYING = {
   /** 身體離邊緣多遠 (往螢幕內側): 左右邊要退進來才看得到整個身體; 上下緣躺在邊上, 只要稍微往頭的方向. */
   inset: { wall: 1.25, floor: 0.25 },
 };
+/** 退場時的「Z」: 每個出現的時間 (秒). */
+const ZZZ = [0, 0.3, 0.6];
 
 const ability = {
   id: ID,
@@ -65,7 +68,7 @@ const ability = {
 
   /** 泡泡與鼻涕泡的圖層 (畫布座標, 不跟著身體變形). */
   layers(k) {
-    const { hex, px, group, ellipse, fill, stroke, transform, layer, track, OUTLINE } = k;
+    const { hex, px, group, path, ellipse, fill, stroke, transform, layer, track, OUTLINE } = k;
     const cyan = hex('#46bfc9');
     const cyanLight = hex('#cdf3f6');
     const white = hex('#ffffff');
@@ -82,7 +85,43 @@ const ability = {
         ], transform({ p: track('snorePosition'), o: track('snoreOpacity') })),
         ...BUBBLES.map((item, index) => bubble(`bubble ${index}`, track(`bubble${index}Position`), track(`bubble${index}Scale`), track(`bubble${index}Opacity`))),
       ]),
+      // 退場時往上飄的「Z」: 畫布座標, 字一直是正的.
+      layer('zzz', 11, Array.from({ length: ZZZ.length }, (_, index) =>
+        group(`z ${index}`, [
+          path('z', [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]].map(([x, y]) => [px(x), px(y)])),
+          stroke(hex('#1f6f6c'), px(0.09)),
+        ], transform({ p: track(`z${index}Position`), s: track(`z${index}Scale`), o: track(`z${index}Opacity`) })),
+      )),
     ];
+  },
+
+  /** 出場: 趴著睡覺, 從邊慢慢滑進來, 停下後打一個大哈欠 (嘴巴張大, 身體伸長), 再繼續睡. */
+  enter: {
+    seconds: 1.4,
+    sample(view, t, k) {
+      const { rest, span, lerp, easeOut, AWAY, LOOP } = k;
+      // 呼吸與泡泡的時鐘在出場結束時接上閒置 (加一輪 LOOP, 時鐘不會是負的).
+      const state = rest(t - 1.4 + LOOP);
+      state.inset = lerp(-AWAY, 0, easeOut(span(t, [0, 0.7])));
+      const yawn = Math.sin(Math.PI * span(t, [0.7, 1.35]));
+      state.yawn = yawn;
+      state.squash = [1 + 0.1 * yawn, 1 - 0.04 * yawn];
+      state.bubbles = span(t, [0.6, 1.0]);
+      return state;
+    },
+  },
+
+  /** 退場: 睡得更沉, 慢慢沉回螢幕外, 留下一串往上飄的「Z」. 含著齒輪時先吞回去, 吞完就趴下. */
+  leave: {
+    seconds: 1.8,
+    sample(view, t, k) {
+      const { rest, span, easeIn, AWAY } = k;
+      const state = rest(t);
+      state.inset = -AWAY * easeIn(span(t, [0.2, 1.6]));
+      state.bubbles = 1 - span(t, [0, 0.4]);
+      state.zzz = ZZZ.map((spawn) => span(t, [spawn, spawn + 1.1]));
+      return state;
+    },
   },
 
   frame({ view, edge, name, state, shape, values, kit }) {
@@ -150,7 +189,19 @@ const ability = {
       values[`bubble${index}Position`] = add(origin, across, R * wobble);
       const scale = ((100 * item.size) / 0.32) * (0.5 + 0.9 * progress);
       values[`bubble${index}Scale`] = [scale, scale];
-      values[`bubble${index}Opacity`] = state.still ? 0 : 85 * Math.sin(Math.PI * progress) * state.sleep;
+      values[`bubble${index}Opacity`] = state.still ? 0 : 85 * Math.sin(Math.PI * progress) * state.sleep * (state.bubbles ?? 1);
+    });
+    // 哈欠: 嘴巴張大.
+    const yawn = state.yawn ?? 0;
+    values.mouthSize = values.mouthSize.map((size) => size * (1 + 1.6 * yawn));
+    // 「Z」從臉 (沉下去之前的位置) 往螢幕內側飄, 左右搖, 越飄越大, 再淡出.
+    ZZZ.forEach((_, index) => {
+      const progress = state.zzz?.[index] ?? 0;
+      const origin = add(toCanvas(edge, [faceLocal[0], faceLocal[1] - 0.2], 0), inward, R * (0.2 + 1.0 * progress));
+      values[`z${index}Position`] = add(origin, across, R * 0.35 * Math.sin(progress * Math.PI * 2 + index));
+      const scale = 80 + 70 * progress + 20 * index;
+      values[`z${index}Scale`] = [scale, scale];
+      values[`z${index}Opacity`] = progress > 0 && progress < 1 ? 100 * Math.sin(Math.PI * progress) : 0;
     });
     // 鼻涕泡: 從嘴脹大, 脹到最大時破掉.
     const mouth = toCanvas(edge, [faceLocal[0], faceLocal[1] + 0.21 * faceScale], state.inset);

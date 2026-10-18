@@ -23,15 +23,21 @@
   "kicks": {
     "duck-right-up": -1.8,
     "pop-right-up": 2.8,
+    "enter-right-up": 2.8,
     "duck-bottom-left": -1.8,
     "pop-bottom-left": 2.8,
+    "enter-bottom-left": 2.8,
     "duck-bottom-right": -1.8,
     "pop-bottom-right": 2.8,
+    "enter-bottom-right": 2.8,
     "duck-left-up": -1.8,
     "pop-left-up": 2.8,
+    "enter-left-up": 2.8,
     "duck-top-right": -1.8,
     "pop-top-right": 2.8,
+    "enter-top-right": 2.8,
     "duck-top-left": -1.8,
-    "pop-top-left": 2.8
+    "pop-top-left": 2.8,
+    "enter-top-left": 2.8
   }
 }

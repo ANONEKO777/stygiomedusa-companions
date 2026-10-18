@@ -20,5 +20,12 @@
     "spit": -2.6,
     "gulp": 2.2
   },
-  "kicks": {}
+  "kicks": {
+    "enter-right-up": 2.8,
+    "enter-bottom-left": 2.8,
+    "enter-bottom-right": 2.8,
+    "enter-left-up": 2.8,
+    "enter-top-right": 2.8,
+    "enter-top-left": 2.8
+  }
 }
