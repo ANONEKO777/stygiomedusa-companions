@@ -1,6 +1,6 @@
 {
   "name": "stygiomedusa-companion-tool",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "private": true,
   "description": "Stygiomedusa 夥伴包的製作工具包: 產生 Lottie 的元件, 驗證, 打包與預覽",
   "type": "module",
